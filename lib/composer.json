@@ -1,0 +1,8 @@
+{
+    "require": {
+        "nahid/jsonq": "^5.2",
+        "rct567/dom-query": "^0.8.0",
+        "adbario/php-dot-notation": "^2.2",
+        "awaydian/json-sql": "^1.0"
+    }
+}

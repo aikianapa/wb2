@@ -1,0 +1,202 @@
+@import("../../css/colors.less");
+
+ol.wb-tree {
+   padding-inline-start: 0px;
+}
+.wb-tree ol {
+    list-style-type: none;
+    padding-inline-start: 25px;
+}
+
+.wb-tree .dd-item {}
+
+.wb-tree-menu {
+    position: absolute;
+}
+
+.tree-edit {
+    position: fixed;
+    right: 0;
+    padding: 0px;
+}
+
+#tree_edit .tree-view {
+    height: ~"calc(100% - 140px)";
+    overflow: auto;
+}
+
+.tree-edit.modal {
+    box-shadow: -5px 0px 2px #00000066;
+    overflow: hidden;
+    .modal-content {
+        height:100vh;
+    }
+    .modal-body {
+        overflow-y:auto;
+        padding-bottom:calc(100vh / 10);
+    }
+}
+
+.wb-tree .dd-item > button {
+    position: absolute;
+    line-height: 36px;
+    height: auto;
+}
+
+.wb-tree .wb-tree-line {
+    width: ~"calc( 100% - 125px )";
+    font-weight: normal;
+    margin-left: 60px;
+    margin-bottom:5px;
+}
+
+.wb-tree .wb-tree-line::after {
+    content: attr(data-id);
+    position: relative;
+    font-size: 10px;
+    margin-top: 14px;
+    float: right;
+    color: @color_gray;
+}
+
+.wb-tree .dd-item > button::before {
+    content: "add_box";
+    font-family: 'Material Icons Outlined';
+    font-size: 16px;
+    color: @color_blue;
+}
+
+.wb-tree .dd-item > button[data-action="collapse"]:before {
+    content: "indeterminate_check_box";
+}
+
+.wb-tree .dd3-handle {
+    position: absolute;
+    overflow: hidden;
+    background: @transparent;
+    border: 0;
+    cursor: move;
+}
+
+.wb-tree .dd3-handle:before {
+    display: none;
+}
+
+.dd-dragel * {
+    display: none;
+}
+
+.wb-tree-placeholder {
+    display: block;
+    width: calc('100%' - 150px);
+    position: relative;
+    left:60px;
+    border:2px dashed @color_blue;
+    height:40px!important;
+}
+
+.wb-tree .dd3-btn {
+    position: absolute;
+    left: 57px;
+    cursor: pointer !important;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100px;
+    min-width: 100px;
+    text-overflow: ellipsis;
+    line-height: 36px;
+    padding: 0 5px 0 0;
+    color: @color_gray;
+}
+
+.wb-tree-del, .wb-tree-add, .wb-tree-swp {
+	position:absolute;
+	cursor: pointer;
+	border-radius: 50%;
+	line-height: 40px!important;
+	text-align: center;
+	vertical-align: middle;
+	color: @color_blue;
+	text-shadow: none;
+	font-size: 30px!important;
+}
+
+.wb-tree-del {
+    right:0px;
+}
+
+.wb-tree-add {
+    right:30px;
+}
+
+.wb-tree-swp {
+    left:25px;
+    text-align: left;
+    cursor:nw-resize;
+}
+
+.wb-tree-data {
+    display:none;
+}
+
+
+.wb-tree .wb-tree-line:hover:before {
+    display:block;
+    position: absolute;
+    content: ' ';
+    top:0;
+    left:23px;
+    width:3px;
+    height:40px;
+    background: @color_blue;
+}
+
+.wb-tree .wb-tree-line:hover,
+    .wb-tree-swp:hover ~ .dd3-content,
+    .wb-tree-add:hover ~ .dd3-content,
+    .wb-tree-del:hover ~ .dd3-content {
+    background: @color_light;
+    cursor: pointer;
+    color: @color_blue;
+}
+
+.wb-tree .wb-tree-line:active {
+    background: @color_blue;
+    color: @color_white;
+}
+
+.wb-tree .dd3-btn:hover {
+    background-color: @color_gray;
+    width: auto;
+}
+
+.wb-tree-check {
+    display:none;
+}
+
+.wb-tree-switch {
+    position: absolute;
+    width:0px;
+    height:0px;
+    top:-7px;
+    right:113px;
+}
+
+.wb-tree-switch::before {
+    color: @color_gray;
+    font-size: 36px;
+    line-height: 40px;
+    font-family: 'Material Icons Outlined';
+}
+
+.wb-tree-check ~ .wb-tree-switch::before {
+    content: "toggle_off";
+    cursor: pointer;
+}
+
+.wb-tree-check:checked ~ .wb-tree-switch::before {
+    content: "toggle_on";
+    color: @color_blue;
+    cursor: pointer;
+
+}

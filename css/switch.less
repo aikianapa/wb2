@@ -1,0 +1,60 @@
+label {
+    &.switch {
+          margin: 1px 0;
+          position: relative;
+          cursor: pointer;
+          display: inline-block;
+          vertical-align: middle;
+
+        input {
+          position: absolute;
+          opacity: 0;
+        }
+
+        span {
+          font-family: 'Material Icons Outlined';
+          position: relative;
+          display: inline-block;
+          font-size: 40px;
+          line-height: 24px;
+          height:30px;
+          -webkit-transition: background-color .75s;
+          color: @color_dark;
+          transition: background-color .75s;
+            &:after {
+              content: "toggle_off";
+              position: absolute;
+              -webkit-transition: all .15s ease-in-out;
+              transition: all .15s ease-in-out;
+            }
+        }
+
+        input:checked+span:after {
+          content: "toggle_on";
+        }
+
+        input:checked+span {
+            color: @color_blue;
+        }
+
+    }
+
+    &.switch-default input:checked+span {
+      color: @color_default;
+    }
+    &.switch-warning input:checked+span {
+      color: @color_warning;
+    }
+    &.switch-danger input:checked+span {
+      color: @color_danger;
+    }
+    &.switch-info input:checked+span {
+      color: @color_info;
+    }
+    &.switch-success input:checked+span {
+      color: @color_success;
+    }
+    &.switch-primary input:checked+span {
+      color: @color_primary;
+    }
+}

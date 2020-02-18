@@ -1,0 +1,259 @@
+[
+    {
+        "name": "adbario/php-dot-notation",
+        "version": "2.2.0",
+        "version_normalized": "2.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/adbario/php-dot-notation.git",
+            "reference": "eee4fc81296531e6aafba4c2bbccfc5adab1676e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/eee4fc81296531e6aafba4c2bbccfc5adab1676e",
+            "reference": "eee4fc81296531e6aafba4c2bbccfc5adab1676e",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*",
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.0|^5.0|^6.0",
+            "squizlabs/php_codesniffer": "^3.0"
+        },
+        "time": "2019-01-01T23:59:15+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helpers.php"
+            ],
+            "psr-4": {
+                "Adbar\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Riku Särkinen",
+                "email": "riku@adbar.io"
+            }
+        ],
+        "description": "PHP dot notation access to arrays",
+        "homepage": "https://github.com/adbario/php-dot-notation",
+        "keywords": [
+            "ArrayAccess",
+            "dotnotation"
+        ]
+    },
+    {
+        "name": "awaydian/json-sql",
+        "version": "1.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/awaydian/json-sql.git",
+            "reference": "596cc3aba5b889f7baa13a7d53928d28d01f2f28"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/awaydian/json-sql/zipball/596cc3aba5b889f7baa13a7d53928d28d01f2f28",
+            "reference": "596cc3aba5b889f7baa13a7d53928d28d01f2f28",
+            "shasum": ""
+        },
+        "require": {
+            "greenlion/php-sql-parser": "^4.1"
+        },
+        "time": "2018-09-26T14:02:01+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "JSONSQL\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT License"
+        ],
+        "authors": [
+            {
+                "name": "Away Dian",
+                "email": "awaydian@outlook.com",
+                "role": "Owner"
+            }
+        ],
+        "description": "query .json files with sql (PHP)",
+        "homepage": "https://github.com/awaydian/json-sql",
+        "keywords": [
+            "json",
+            "sql"
+        ]
+    },
+    {
+        "name": "greenlion/php-sql-parser",
+        "version": "4.3.0",
+        "version_normalized": "4.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/greenlion/PHP-SQL-Parser.git",
+            "reference": "e0262c0848d95c7f777d1a5aa6b0a42e7763e223"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/greenlion/PHP-SQL-Parser/zipball/e0262c0848d95c7f777d1a5aa6b0a42e7763e223",
+            "reference": "e0262c0848d95c7f777d1a5aa6b0a42e7763e223",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "analog/analog": "^1.0.6",
+            "phpunit/phpunit": "^4.0.14",
+            "squizlabs/php_codesniffer": "^1.5.1"
+        },
+        "time": "2019-06-01T04:06:45+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "PHPSQLParser\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "André Rothe",
+                "email": "phosco@gmx.de",
+                "homepage": "https://www.phosco.info",
+                "role": "Committer"
+            },
+            {
+                "name": "Justin Swanhart",
+                "email": "greenlion@gmail.com",
+                "homepage": "http://code.google.com/u/greenlion@gmail.com/",
+                "role": "Owner"
+            }
+        ],
+        "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
+        "homepage": "https://github.com/greenlion/PHP-SQL-Parser",
+        "keywords": [
+            "creator",
+            "mysql",
+            "parser",
+            "sql"
+        ]
+    },
+    {
+        "name": "nahid/jsonq",
+        "version": "v5.2.4",
+        "version_normalized": "5.2.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nahid/jsonq.git",
+            "reference": "8b38ceaa05c6d92355637e300dec15dcdab21474"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nahid/jsonq/zipball/8b38ceaa05c6d92355637e300dec15dcdab21474",
+            "reference": "8b38ceaa05c6d92355637e300dec15dcdab21474",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "graham-campbell/testbench": "^3.1",
+            "phpunit/phpunit": "^4.8 || ^5.0",
+            "symfony/var-dumper": "^3.4"
+        },
+        "time": "2019-10-17T18:53:33+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Nahid\\JsonQ\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "CC0-1.0"
+        ],
+        "authors": [
+            {
+                "name": "Nahid Bin Azhar",
+                "email": "nahid.dns@gmail.com"
+            }
+        ],
+        "description": "JsonQ is a PHP based json data query library",
+        "homepage": "https://github.com/nahid/jsonq",
+        "keywords": [
+            "json",
+            "jsonq",
+            "query"
+        ]
+    },
+    {
+        "name": "rct567/dom-query",
+        "version": "v0.8",
+        "version_normalized": "0.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Rct567/DomQuery.git",
+            "reference": "15208bd61f0b87d3befa795a38e5b47a3dbebb97"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Rct567/DomQuery/zipball/15208bd61f0b87d3befa795a38e5b47a3dbebb97",
+            "reference": "15208bd61f0b87d3befa795a38e5b47a3dbebb97",
+            "shasum": ""
+        },
+        "require": {
+            "ext-dom": "*",
+            "ext-json": "*",
+            "ext-xml": "*",
+            "php": "^7.0.0"
+        },
+        "require-dev": {
+            "phpstan/phpstan": "^0.8",
+            "phpunit/php-code-coverage": "^5.3",
+            "phpunit/phpunit": "^6.5",
+            "squizlabs/php_codesniffer": "^3.1"
+        },
+        "time": "2019-05-13T13:28:13+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Rct567\\": "src/Rct567"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rct567",
+                "email": "rct999@gmail.com"
+            }
+        ],
+        "description": "DomQuery is a PHP library that allows easy 'jQuery like' DOM traversing and manipulation",
+        "keywords": [
+            "css",
+            "dom",
+            "html",
+            "jquery",
+            "selector",
+            "xml"
+        ]
+    }
+]

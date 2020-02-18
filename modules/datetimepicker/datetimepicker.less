@@ -1,0 +1,49 @@
+@import("../../css/colors.less");
+@import("../../lib/fonts/materialicons/materialicons.css");
+.datetimepicker {
+    td {
+      padding:10px;
+    }
+    th {
+      padding: 5px;
+    }
+    td span.hour {
+        margin:5px 0;
+    }
+    table {
+      min-width:280px;
+      tr {
+        td.day:hover {
+          background-color: @color_gray;
+        }
+        td span.active.active,
+        td.active.active {
+            background-color: @color_blue;
+            background-image: none;
+            border-radius: 2px;
+        }
+        td.today {
+            background-color: @color_warning;
+            background-image: none;
+        }
+        td.today:hover:hover {
+            background-color: @color_gray;
+            background-image: none;
+        }
+        td span:hover {
+            background-color: @color_gray;
+        }
+      }
+
+    }
+    .glyphicon {
+      font-family: 'Material Icons Outlined';
+    }
+    .glyphicon-arrow-right:after {
+        content: 'arrow_forward_ios';
+    }
+    .glyphicon-arrow-left:after {
+        content: 'arrow_back_ios';
+    }
+
+}

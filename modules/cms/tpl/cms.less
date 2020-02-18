@@ -1,0 +1,81 @@
+@import("../../../css/colors.less");
+@import("../tpl/sidebar/css/sidebar.less");
+
+@size: 1rem;
+
+.cms {
+  #content {
+    padding: 20px 20px;
+  }
+
+  .btn-white {
+    background-color: white;
+    color: @color_dark;
+    border: 1px solid @color_gray;
+
+    * {
+      color: @color_dark;
+    }
+  }
+
+  .cms-actions {
+      * {
+        font-size: @size;
+        color: @color_dark;
+      }
+      .fa {
+        color: @color_blue;
+        width:20px;
+      }
+  }
+
+  .dropdown-toggle::after {
+    display: none;
+    /*
+  content: '\f0c9';
+  font: normal normal normal 14px/1 FontAwesome;
+  border:0;
+  */
+  }
+
+  .modal {
+    &.inline {
+      position: relative!important;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      z-index: 2000;
+
+      &.show {
+        display: block;
+      }
+    }
+  }
+
+  .table {
+    .badge-pill {
+      font-size: 10px;
+    }
+  }
+
+  .pagination {
+    .page-item {
+      .page-link {
+        color: @color_dark;
+      }
+
+      &.active {
+        .page-link {
+          background-color: @color_dark;
+          border-color: @color_dark;
+          color: @color_white;
+        }
+      }
+    }
+  }
+
+  .table-responsive {
+    display: inline-table;
+  }
+}

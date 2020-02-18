@@ -1,0 +1,56 @@
+@import("../../css/colors.less");
+
+.wb-multiinput-row {
+    position:relative;
+    cursor: context-menu;
+    padding: 2px 60px 2px 30px;
+    margin:0;
+    border-left: 3px transparent solid;
+}
+
+.wb-multiinput-row * {
+ //	z-index:100;
+}
+
+.wb-multiinput-row [class^='col-'], .wb-multiinput .col {
+    padding: 0 5px;
+    z-index: 1;
+}
+
+
+
+.wb-multiinput-del, .wb-multiinput-add, .wb-multiinput-swp {
+	position:absolute;
+	cursor: pointer;
+	border-radius: 50%;
+	line-height: 40px!important;
+	text-align: center;
+	vertical-align: middle;
+	color: @color_blue;
+	text-shadow: none;
+	font-size: 30px!important;
+}
+
+.wb-multiinput-del {
+    right:0px;
+}
+
+.wb-multiinput-add {
+    right:30px;
+}
+
+.wb-multiinput-swp {
+    left:0;
+    cursor:move;
+    z-index: 0;
+}
+
+.wb-multiinput-row:hover {
+    border-left: 3px @color_blue solid;
+}
+
+.wb-multiinput-menu {
+  position: absolute;
+  margin-top: -3px;
+  z-index:99999;
+}
