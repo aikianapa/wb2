@@ -8,11 +8,10 @@
 * PHP >= 5.6 (PHP 7 is supported)
 * Apache2 HTTP Server
 * [PHP Mbstring](http://php.net/manual/en/mbstring.installation.php)
-* [PHP GD](https://stackoverflow.com/questions/21216129/install-gd-library-and-freetype-on-linux)
+* [PHP Imagick](https://stackoverflow.com/questions/27193631/install-imagick-for-php-and-apache-on-windows)
 
 ### Recommended
 
-* [PHP Imagick](https://stackoverflow.com/questions/27193631/install-imagick-for-php-and-apache-on-windows)
 
 ### Installation
 
