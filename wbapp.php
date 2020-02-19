@@ -990,6 +990,7 @@ class wbApp
     public function getTpl($tpl = null, $path = false)
     {
         $out = null;
+
         if (true == $path) {
             if (!$cur and is_file($_ENV['path_app']."/{$tpl}")) {
                 $cur = wbNormalizePath($_ENV['path_app']."/{$tpl}");
@@ -1016,7 +1017,8 @@ class wbApp
 //        if ($locale!==null) {
 //            wbEnvData("tpl->{$tpl}->locale", $locale);
 //        }
-        return $out->find(".wb-html");
+        //return $out->find(".wb-html");
+        return $out;
     }
 
 

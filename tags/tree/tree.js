@@ -294,7 +294,7 @@ $.fn.getPath = function() {
     var count = 0;
     while(stop == false) {
         count++;
-        var parent = $(line).parent(".wb-tree-item").parent("ol");
+        let parent = $(line).parent(".wb-tree-item").parent("ol");
         if ($(parent).hasClass("wb-tree") || count >= 999) {
             stop = true;
         } else {

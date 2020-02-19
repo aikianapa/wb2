@@ -387,7 +387,7 @@ wbapp.watcherInit = function() {
                   let val = $(that).val();
                   if ($(that).is("select") && params.value > "") val = $(that).find("option:selected").attr("data-"+params.value);
                   template = str_replace("%value%",val,template);
-                  
+
                   var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route});
                   if (result.result !== undefined) {
                       $(params.change).html(result.result).trigger("change");
@@ -739,8 +739,8 @@ $.fn.runScripts = function() {
 
 $.fn.serializeJson = function(data = {}) {
   var form = $(this).clone();
+  $(form).find("form, .wb-unsaved, .wb-tree-item").remove();
   var branch = $(form).serializeArray();
-  $(form).find("form, .wb-unsaved").remove();
   $(branch).each(function(i, val) {
     data[val["name"]] = val["value"];
     if ($(form).find("textarea[type=json][name='" + val["name"] + "']").length && strpos(data[val["name"]],"}")) {

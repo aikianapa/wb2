@@ -210,9 +210,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
     				$tree=wbTreeFindBranch($tree,$branch);
     			}
         }
-        if ($dom->hasAttr("placeholder") AND $tag == "select") {
-            $dom->prepend("<option value='' class='placeholder'>".$dom->attr("placeholder")."</option>");
-        }
+
 
         $idx=0;
 
@@ -228,10 +226,9 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
                 $item["_ndx"]=$idx+1;
                 $item["_lvl"]=$lvl-1;
                 if ($parent_id>"") $item["%id"]=$parent_id;
-                $line=$dom->app->fromString($tpl,true);
+                $line=$dom->app->fromString($tpl);
                 $child=$dom->app->fromString($tpl,true);
                 $line->fetch($item);
-
                 if ($parent==0 OR (isset($item["children"]) AND is_array($item["children"]) AND count($item["children"]))) {
                     if ($pardis==1 AND ($limit!==$lvl-1)) {
                         $line->children()->attr("disabled",true);
@@ -252,7 +249,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
                 $idx++;
                 $lvl--;
 
-                if (isset($line)) $dom->append($line->html());
+                if (isset($line)) $dom->append($line->outerHtml());
             }
         }
     }
@@ -277,20 +274,20 @@ function tagTreeForm($dict=[],$data=[]) {
 function tagTreeProp($type=null) {
     $app = new wbApp();
     $out = $app->fromFile(__DIR__ . "/tree_prop.php");
-    $loc = $out->locale;
     if ($type == null) {
         $type = $_POST["type"];
-        $com = $out->find("[type=common]")->setLocale($loc);
-        $com->fetch($_POST["dict"])->clearValues();
+        $com = $app->fromString($out->find("[type=common]")->html(),true);
+        $com->fetch($_POST["dict"]);
+
     }
     if ($out->find("[type={$type}]")->length) {
-      $out = $out->find("[type={$type}]")->setLocale($loc);
+      $out = $app->fromString($out->find("[type={$type}]")->html(),true);
       $out->fetch($_POST["dict"]);
       if (isset($com)) $out->find("form")->append($com->find("form")->html());
     } else {
       $out = $com;
     }
-    $out->fetch($_POST["dict"])->clearValues();
+    $out->fetch($_POST["dict"]);
     return wb_json_encode(["content"=>$out->html()]);
 }
 

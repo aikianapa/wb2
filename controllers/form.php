@@ -9,7 +9,7 @@ function form__controller(&$app)
     }
     $call=__FUNCTION__ ."__".$_ENV["route"]["mode"];
     if (is_callable($call)) {
-        $dom=$call($app);
+        $dom = $call($app);
     } else {
         $aCall=$_ENV["route"]["form"]."_".$_ENV["route"]["mode"];
         $eCall=$_ENV["route"]["form"]."__".$_ENV["route"]["mode"];
@@ -90,9 +90,7 @@ function form__controller__show(&$app)
     $form = $app->vars->get("_route.form");
     $item = $app->vars->get("_route.item");
     $tpl = null;
-    if (isset($_ENV["route"]["tpl"]) and $_ENV["route"]["tpl"]>"") {
-        $tpl = $app->vars->get("_route.tpl");
-    }
+    if ($app->vars->get("_route.tpl") > "") $tpl = $app->vars->get("_route.tpl");
     $mode="show";
     $Item = $app->ItemRead($form, $item);
     if (!$Item) {

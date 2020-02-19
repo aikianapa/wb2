@@ -31,7 +31,7 @@
             } else {
                 $file = $dom->attr("src");
             }
-            if (!is_file($file)) {$file = $_ENV["path_app"].$file;}
+            if (!is_file($file)) {$file = $_ENV["dir_app"].$file;}
             $dom->removeAttr("data-wb");
             $out = $dom->app->fromFile($file);
             $out->data = $dom->data;

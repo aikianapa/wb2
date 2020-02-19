@@ -15,15 +15,9 @@ $app = new wbApp();
 if (!$app->cache["check"]) {
     $app->data = array();
     $exclude  = in_array($app->vars->get("_route.controller"),array("module","ajax","thumbnails"));
-	if ($app->vars("_route.form") !== "default_form") {
 		$app->dom = $app->LoadController();
-	} else {
-		if (!is_dir($_ENV["path_app"]."/form")) {$app->dom = $app->LoadController();} else {
-			$app->dom = $app->FromString(wbErrorOut(404));
-		}
-	}
-	if (!is_object($app->dom)) {$app->dom=$app->fromString($app->dom,true);}
-  $app->dom->fetchTargets();
+	  if (!is_object($app->dom)) {$app->dom = $app->fromString($app->dom,true);}
+  //  $app->dom->fetchTargets();
 	//if ($_ENV["route"]["controller"]!=="module") {
 		// чтобы вставки модуля не пометились .wb-done
 	//	$app->dom->fetch($app->data,true);
