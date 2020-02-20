@@ -81,6 +81,7 @@ function wbInitEnviroment(&$app)
 }
 
 function wbInitSettings(&$app) {
+  if (isset($_ENV["settings"]["lang"])) return $_ENV["settings"];
   if (!$app->vars("_sess.events")) $app->vars("_sess.events",[]); // массив для передачи событий в браузер во время вызова wbapp.alive()
   if (isset($_COOKIE['user'])) {$_SESSION['user'] = $app->ItemRead("users",$_COOKIE['user']);}
   if (!isset($_SESSION['user'])) {
@@ -103,12 +104,11 @@ function wbInitSettings(&$app) {
   $_ENV['variables'] = $variables;
   $settings = array_merge($settings, $variables);
   $_ENV['settings'] = &$settings;
-
   if ($_SERVER["REQUEST_URI"]=="/engine/") {
       unset($_ENV["lang"]);
   } else {
-      $app->vars("_env.lang","en");
-      if ($app->vars("_sett.lang") > "") $app->vars("_env.lang",$app->vars("_sett.lang"));
+      $_ENV["lang"] = "en";
+      if ($settings["lang"] > "") $_ENV["lang"] = $settings["lang"];
   }
   $_ENV["locales"]=wbListLocales($app);
   $_ENV["settings"]["locale"]=substr($_ENV["lang"],0,2);
