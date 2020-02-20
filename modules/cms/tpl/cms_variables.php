@@ -7,7 +7,7 @@
       <div class="col">
           <input class="form-control" placeholder="{{_lang.description}}" type="text" name="header"> </div>
   </div>
+  <button type="button" class="mt-3 btn btn-primary pull-right" name="button" data-wb="role=save&form=admin&item=settings">
+    <i class="fa fa-save"></i> {{_lang.btn_save}}
+  </button>
 </form>
-<button type="button" class="mt-3 btn btn-primary pull-right" name="button" data-wb="role=save&form=admin&item=settings">
-  <i class="fa fa-save"></i> {{_lang.btn_save}}
-</button>

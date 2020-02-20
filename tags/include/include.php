@@ -96,6 +96,7 @@
             } else {
                 $dom->html($out->outerHtml());
             }
+            return $out;
             break;
         }
 

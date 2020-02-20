@@ -71,14 +71,18 @@ class wbDom extends DomQuery
 
     public function fetchTargets() {
       $attrs = array_keys($this->attributes());
-      $tags = ["append","prepend","after","before","html","text"];
+      $tags = ["append","prepend","after","before","html","text","remove"];
       $tags = array_intersect($attrs,$tags);
       if (!count($tags)) return;
       foreach($tags as $i => $t) {
           $find = $this->closest(":root")->find($this->attr($t));
           if ($find->length) {
               $this->removeAttr($t);
-              $find->$t($this);
+              if ($t == "remove") {
+                  $find->$t();
+              } else {
+                  $find->$t($this);
+              }
               $this->remove();
           }
       }
