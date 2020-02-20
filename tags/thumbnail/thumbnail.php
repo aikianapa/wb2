@@ -267,6 +267,6 @@
         $dom->attr("noimg",$noimg);
         $dom->attr("style",$style);
         $dom->removeAttr('json');
-        $dom->removeAttr('data-role');
+        $dom->removeAttr('data-wb');
     }
 ?>
