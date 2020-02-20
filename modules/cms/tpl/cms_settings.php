@@ -13,6 +13,13 @@
     </div>
 
     <div class="form-group row">
+      <label class="form-control-label col-sm-4 col-12">{{_lang.base}}</label>
+      <div class="col-sm-8 col-12">
+          <input type="text" class="form-control" name="base" placeholder="{{_lang.base}}">
+      </div>
+    </div>
+
+    <div class="form-group row">
       <label class="col-sm-4 col-12">{{_lang.editor}}</label>
       <div class="col-sm-8 col-12">
       <select class="form-control" name="editor" data-wb="role=foreach&from=_env.editors">
@@ -50,6 +57,7 @@
   save = "Save"
   lang = "Language"
   page_size = "Default page size"
+  base = "Templates folder"
 [ru]
   enable = "Включен"
   editor = "Редактор"
@@ -58,4 +66,5 @@
   save = "Сохранить"
   lang = "Язык"
   page_size = "Размер страниц"
+  base = "Папка шаблонов"
 </script>

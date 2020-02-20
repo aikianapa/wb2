@@ -102,7 +102,8 @@ function wbInitSettings(&$app) {
   }
   $_ENV['variables'] = $variables;
   $settings = array_merge($settings, $variables);
-  $_ENV['settings'] = $settings;
+  $_ENV['settings'] = &$settings;
+
   if ($_SERVER["REQUEST_URI"]=="/engine/") {
       unset($_ENV["lang"]);
   } else {
@@ -130,6 +131,10 @@ function wbInitSettings(&$app) {
   }
   if (isset($_ENV['settings']['page_size']) and is_numeric($_ENV['settings']['page_size'])) {
       $_ENV['page_size'] = $_ENV['settings']['page_size'];
+  }
+  if (isset($_ENV['settings']['base']) AND $_ENV['settings']['base'] > "") {
+      $_ENV['base'] = $_ENV['settings']['base'];
+      $_ENV['path_tpl'] = str_replace("//","/",$_ENV['path_app']."/".$_ENV['base']);
   }
   if ($_ENV['settings']['editor'] == "") $_ENV['settings']['editor'] = 'jodit';
   $_ENV['settings']['max_upload_size'] = wbMaxUplSize();
@@ -1544,9 +1549,7 @@ function wbGetItemImg($Item = null, $idx = 0, $noimg = '', $imgfld = 'images', $
 {
     $res = false;
     $count = 0;
-    if (null == $Item) {
-        $Item = $_ENV['ITEM'];
-    }
+
     if (!is_file("{$_ENV['path_app']}/{$noimg}")) {
         if (is_file("{$_ENV['path_engine']}/uploads/__system/{$noimg}")) {
             $noimg = "/engine/uploads/__system/{$noimg}";
@@ -1570,7 +1573,7 @@ function wbGetItemImg($Item = null, $idx = 0, $noimg = '', $imgfld = 'images', $
 
             if (false == $res and ((true == $visible and 1 == $img['visible']) or false == $visible) and is_file("{$_ENV['path_app']}/uploads/{$Item['_table']}/{$Item['id']}/{$img['img']}")) {
                 if ($idx == $count) {
-                    $image = "{$_ENV['path_app']}/uploads/{$Item['_table']}/{$Item['id']}/{$img['img']}";
+                    $image = "/uploads/{$Item['_table']}/{$Item['id']}/{$img['img']}";
                     $res = true;
                 }
                 ++$count;
@@ -2324,6 +2327,7 @@ function wbControls($set = '')
 
 function wbListForms($exclude = true)
 {
+    if (isset($_ENV["list_forms"])) return $_ENV["list_forms"];
     if (true == $exclude) {
         $exclude = array('forms/common', 'forms/admin', 'forms/source', 'forms/snippets');
     }
@@ -2367,7 +2371,7 @@ function wbListForms($exclude = true)
     if (in_array('form', $list, true)) {
         unset($list[array_search('form', $list, true)]);
     }
-
+    $_ENV["list_forms"] = $list;
     return $list;
 }
 
@@ -2404,6 +2408,7 @@ function wbListModules(&$app = null)
 
 function wbListTags()
 {
+    if (isset($_ENV["list_tags"])) return $_ENV["list_tags"];
     $list = array();
     $eList = wbListFilesRecursive($_ENV['path_engine'].'/tags', true);
     $aList = wbListFilesRecursive($_ENV['path_app'].'/tags', true);
@@ -2430,6 +2435,7 @@ function wbListTags()
     foreach(array_keys($list) as $name) {
         require_once $list[$name];
     }
+    $_ENV["list_tags"] = $list;
     return $list;
 }
 
@@ -2542,15 +2548,22 @@ function wbClearValues($out,$rep='')
 }
 
 function wbListTpl() {
-$dir=$_ENV['path_tpl']; $list=array(); $result=array(); if (is_dir($dir)) { $list=wbListFilesRecursive($dir, true); foreach ($list as $l=> $val) {
-if (('.php' == substr($val['file'], -4) or '.htm' == substr($val['file'], -4) or '.tpl' == substr($val['file'], -4)) and !strpos('.inc.', $val['file'])) {
-$path = str_replace($dir, '', $val['path']);
-$res = substr($path.'/'.$val['file'], 1);
-$result[] = $res;
-}
-}
+if (isset($_ENV["list_tpl"])) return $_ENV["list_tpl"];
+$dir=$_ENV['path_tpl'];
+$list = [];
+$result = [];
+if (is_dir($dir)) {
+  $list=wbListFilesRecursive($dir, true);
+  foreach ($list as $l=> $val) {
+    if (('.php' == substr($val['file'], -4) or '.htm' == substr($val['file'], -4) or '.tpl' == substr($val['file'], -4)) and !strpos('.inc.', $val['file'])) {
+      $path = str_replace($dir, '', $val['path']);
+      $res = substr($path.'/'.$val['file'], 1);
+      $result[] = $res;
+    }
+  }
 }
 sort($result);
+$_ENV["list_tpl"] = $result;
 return $result;
 }
 
