@@ -91,8 +91,11 @@
             $out->fetch();
             tagIncludeContent($dom,$out);
             $dom->removeAttr("data-wb");
-            $dom->html($out->outerHtml());
-            return $out;
+            if ($dom->tag() == "meta") {
+                $dom->replace($out->outerHtml());
+            } else {
+                $dom->html($out->outerHtml());
+            }
             break;
         }
 
