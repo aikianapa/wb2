@@ -11,7 +11,7 @@
 
         $noimg = $dom->params->noimg;
         $form = $dom->params->form;
-        if ($form=="" && isset($Item["form"])) $form=$Item["form"];
+        if ($form=="" && isset($Item["_form"])) $form=$Item["_form"];
         $from = $dom->params->from;
         if ($from=="") $from = "images";
         $item=$dom->attr("data-wb-item");

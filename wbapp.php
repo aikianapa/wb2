@@ -66,6 +66,10 @@ class wbDom extends DomQuery
         } else {
             $this->remove();
         }
+        if ($this->params->hide == "true") {
+            $this->after($this->html());
+            $this->remove();
+        }
     }
 
 

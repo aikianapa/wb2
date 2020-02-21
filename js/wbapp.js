@@ -359,6 +359,8 @@ wbapp.watcherInit = function() {
                   if (result.result !== undefined) {
                       $(params.filter).html(result.result).trigger("click");
                   }
+                  console.log("Trigger: watcher_filter");
+                  $(document).trigger("watcher_filter",params.filter,result);
               });
               $(that).data("watcher_filter",true);
           }
@@ -383,7 +385,6 @@ wbapp.watcherInit = function() {
           if ($(that).data("watcher_change") == undefined) {
               $(that).off("change").on("change",function(){
                   let template = wbapp.tpl[tpl].html;
-
                   let val = $(that).val();
                   if ($(that).is("select") && params.value > "") val = $(that).find("option:selected").attr("data-"+params.value);
                   template = str_replace("%value%",val,template);
@@ -392,6 +393,8 @@ wbapp.watcherInit = function() {
                   if (result.result !== undefined) {
                       $(params.change).html(result.result).trigger("change");
                   }
+                  console.log("Trigger: watcher_change");
+                  $(document).trigger("watcher_change",params.change,result);
               });
               $(that).data("watcher_change",true);
               $(that).trigger("change");
@@ -437,6 +440,18 @@ wbapp.watcherInit = function() {
       } else {
           watcher_watcher(that);
       }
+    });
+
+    $(document).find("[data-wb-tpl]").each(function() {
+        // fix for pagination without data-watcher attribute
+        let tpl = $(this).attr("data-wb-tpl");
+        if ($(document).find("#ajax-"+tpl).length && wbapp.watcher[tpl] == undefined) {
+              let params = {};
+              params.page = function(data) {
+                    $(document).find("[data-wb-tpl='"+tpl+"']").html(data);
+              }
+              wbapp.watcher[tpl] = params;
+        }
     });
 }
 
