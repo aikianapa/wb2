@@ -179,7 +179,13 @@ function ajax_fetch() {
     if ($app->vars("_post._data"))   $tpl->data = $app->vars("_post._data");
     $tpl->fetch();
   }
-  return wb_json_encode(["result"=>$tpl->html()]);
+  $data = [];
+  foreach($tpl->attributes() as $at => $val) {
+      if (substr($at,0,5) == "data-" && substr($at,0,7) !== "data-wb") {
+          $data[substr($at,5)] = $val;
+      }
+  }
+  return wb_json_encode(["result"=>$tpl->html(),"return"=>$data]);
 }
 
 function ajax__setdata()

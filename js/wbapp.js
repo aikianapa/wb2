@@ -359,8 +359,13 @@ wbapp.watcherInit = function() {
                   if (result.result !== undefined) {
                       $(params.filter).html(result.result).trigger("click");
                   }
+                  if (result.return !== undefined) {
+                      $.each(result.return, function(fld,val){
+                          $(params.filter).attr("data-"+fld,val);
+                      });
+                  }
                   console.log("Trigger: watcher_filter");
-                  $(document).trigger("watcher_filter",params.filter,result);
+                  $(document).trigger("watcher_filter", params.filter, result);
               });
               $(that).data("watcher_filter",true);
           }
@@ -404,7 +409,7 @@ wbapp.watcherInit = function() {
       var watcher_watcher = function(that) {
                 params.create = function(item,data) { $(document).find(params.watcher).prepend(data); }
                 params.update = function(item,data) {
-                    let $tpl = $(document).find("[data-wb-tpl='"+tpl+"']")
+                    let $tpl = $(document).find("[data-wb-tpl='"+tpl+"']");
                     if ($tpl.find("[data-watcher='item="+item+"']").length) {
                         $tpl.find("[data-watcher='item="+item+"']").replaceWith(data);
                     } else if ($tpl.find("[data-watcher^='item="+item+"&']").length) {
@@ -479,11 +484,11 @@ wbapp.watcherCheck = function(params) {
     if (tpl > "") {
         var uri = wbapp.template(tpl).params.route.uri;
         var result = wbapp.postWait(uri,{_watch_item:item,_watch_route:wbapp.template(tpl).params.route});
-        result = $(result).find("[data-wb-tpl]").html();
+        console.log(params);
+        result = $(result).find(params.watcher).html();
         $(result).find("script[type='text/locale']").remove();
         result = $(result).outerHTML();
 
-        console.log(tpl,watch);
         if (mode == "update") wbapp.watcher[tpl].update(watch,result);
         if (mode == "remove") wbapp.watcher[tpl].remove(item,result);
         if (mode == "create" && wbapp.watcher[tpl] !== undefined) {

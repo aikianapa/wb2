@@ -17,6 +17,15 @@ function tagForeach(&$dom,$Item=null) {
         $dom->foreach = $dom->clone();
         $dom->html("");
 
+        if ($dom->params->return) {
+            $dom->params->return = json_decode($dom->params->return);
+            if ($dom->params->return->min && is_string($dom->params->return->min) )
+                $dom->params->return->min = (array)$dom->params->return->min;
+            if ($dom->params->return->max && is_string($dom->params->return->max) )
+                $dom->params->return->max = (array)$dom->params->return->max;
+
+        }
+
         if ($dom->app->vars("_post._watch_route")) $dom->app->vars("_route",$dom->app->vars("_post._watch_route"));
 
 
@@ -133,6 +142,7 @@ function tagForeach(&$dom,$Item=null) {
                   if ($flag AND $dom->params->if) $flag=wbWhereItem($val,$dom->params->if);
                   if ($dom->app->vars("_post._filter") && $flag) $flag = $dom->app->filterItem($val);
                   if ($flag) {
+                    if ($dom->params->return) _tagForeachReturn($dom,$val);
                     $n++;
                     //echo $val["id"]." {$pages} "."\n";
                       if ($oddeven=="even") {
@@ -193,6 +203,35 @@ function tagForeach(&$dom,$Item=null) {
         }
         $dom->addClass("wb-done");
         $dom->removeAttr("data-wb");
+        $dom->removeAttr("data-wb-if");
+        $dom->removeAttr("data-wb-return");
         return $dom;
+    }
+
+    function _tagForeachReturn(&$dom,$Item=[]) {
+        $par = $dom->params->return;
+        $item = new Dot();
+        $item->setReference($Item);
+        if ($par->min) {
+            foreach($par->min as $i => $fld) {
+                $value = $item->get($fld);
+                if (!$dom->attr("data-min-{$fld}") OR $dom->attr("data-min-{$fld}") > $value) $dom->attr("data-min-{$fld}",$value);
+            }
+        }
+        if ($par->max) {
+            foreach($par->max as $i => $fld) {
+                $value = $item->get($fld);
+                if (!$dom->attr("data-max-{$fld}") OR $dom->attr("data-max-{$fld}") < $value) $dom->attr("data-max-{$fld}",$value);
+            }
+        }
+        if ($par->count) {
+            if (!$dom->attr("data-count")) {
+              $count = 1;
+            } else {
+              $count = intval($dom->attr("data-count"));
+              $count++;
+            }
+            $dom->attr("data-count",$count);
+        }
     }
 ?>
