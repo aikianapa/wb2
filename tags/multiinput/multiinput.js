@@ -49,6 +49,10 @@ function wb_multiinput_init() {
             }
             $multi.store();
         });
+
+        $multi.delegate(".wb-multiinput-row","change",function(){
+            $multi.store();
+        });
     }
 
     $.fn.value = function(data = undefined) {

@@ -30,6 +30,8 @@
 
         $func=$load."_afterRead";
         $_func=$load."__afterRead";
+        $dom->template = $out;
+        $dom->data = (object)$Item;
         // функция вызывается после получения шаблона модуля
         if (is_callable($func)) {
             $out = @$func($dom);
@@ -39,7 +41,7 @@
         $attrs = $dom->attributes;
         if ($attrs->length) {
             foreach($attrs as $attr) {
-                if ($attr->name !== "data-wb") {
+                if ($attr->name !== "data-wb" AND $out->children()->length) {
                     $out->children(":first-child")->attr($attr->name,$attr->value);
                 }
             }
@@ -60,10 +62,11 @@
         $func=$load."_beforeShow";
         $_func=$load."__beforeShow";
         // функция вызывается перед выдачей модуля во внешний шаблон
+        $dom->template = $out;
         if (is_callable($func)) {
-            $func($out,$Item);
+            $func($dom,$Item);
         } else if (is_callable($_func)) {
-            $_func($out,$Item);
+            $_func($dom,$Item);
         }
         $out->fetch($Item);
         if ($dom->params->hide == "true") {$dom->addClass("wb-out-inner");}

@@ -21,7 +21,6 @@ function thumbnails__controller($app) {
   }
 
 	$app->vars("_get.zc",$app->vars("_route.zc"));
-
   thumbnail_view($app);
 	die;
 }

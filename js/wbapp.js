@@ -447,7 +447,7 @@ wbapp.watcherInit = function() {
       }
     });
 
-    $(document).find("[data-wb-tpl]").each(function() {
+    $(document).find("[data-wb-tpl]:not(.wb-multiinput)").each(function() {
         // fix for pagination without data-watcher attribute
         let tpl = $(this).attr("data-wb-tpl");
         if ($(document).find("#ajax-"+tpl).length && wbapp.watcher[tpl] == undefined) {
@@ -850,7 +850,7 @@ setTimeout(function(){
       wbapp.alive();
     });
     wbapp.unloading();
-},1300);
+},1500);
 //wbapp.loading();
 
 }

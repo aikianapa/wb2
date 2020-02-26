@@ -123,6 +123,7 @@ class tagTreeSelect {
 
             if ($this->parent !== false && $item["active"] == "on")  $flag = true;
             if ($this->level > "" && $this->level !== $this->lvl) $flag = false;
+            if ($app->vars("_post._filter") && $flag) $flag = $app->filterItem($item);
             if ($flag == true) $this->select->append($line);
 
             if ((isset($item["children"]) AND is_array($item["children"]) AND count($item["children"]))) {
@@ -194,14 +195,12 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
             else {
                 $limit=$limit*1;
             }
-
-            $tpl=$dom->html();
+            $tpl = $dom->html();
         } else {
             foreach($param as $k =>$val) $$k=$val;
             $tree=$Item;
         }
         if (!isset($level)) $level="";
-
         $dom->html("");
         if ($branch !== 0) {
     			if ($tree==NULL AND $branch>"") {
@@ -231,7 +230,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
                 $line->fetch($item);
                 if ($parent==0 OR (isset($item["children"]) AND is_array($item["children"]) AND count($item["children"]))) {
                     if ($pardis==1 AND ($limit!==$lvl-1)) {
-                        $line->children()->attr("disabled",true);
+                        $line->attr("disabled",true);
                     }
 
                     if ($lvl>1) $parent=1;
@@ -240,15 +239,14 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
 
                             if ($parent !== 1) {
                                 $lvl--;
-                                $line->html($child->html());
+                                $line->html($child->find(".wb-html")->html());
                             } else {
-                                    if ($children == 1) $line->append("<{$tag}>".$child->html()."</{$tag}>");
+                                if ($children == 1) $line->append("<{$tag}>".$child->find(".wb-html")->html()."</{$tag}>");
                             }
                     }
                 }
                 $idx++;
                 $lvl--;
-
                 if (isset($line)) $dom->append($line->outerHtml());
             }
         }
