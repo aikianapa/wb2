@@ -105,8 +105,7 @@
               recurse_copy($old, $new);
           }
           if ($res) {
-              $ret = ["error"=>0,"id"=>$res,"new"=>$new];
-
+              $ret = ["error"=>0,"id"=>$res,"new"=>$new,"data"=>$data];
           } else {
               $ret["error"]=1;
               $ret["text"]=$res;

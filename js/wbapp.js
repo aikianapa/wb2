@@ -586,7 +586,7 @@ $.fn.checkRequired = function() {
 		if (label == undefined || label == "") label = $(this).attr("name");
 
         $(this).data("idx", idx);
-        if ($(this).is(":not([disabled],[min],[max],[maxlength],[type=checkbox]):visible")) {
+        if ($(this).is(":not([disabled],[readonly],[min],[max],[maxlength],[type=checkbox]):visible")) {
             if ($(this).val() == "") {
                 res = false;
                 console.log("trigger: wb_required_false ["+$(this).attr("name")+"]");
@@ -632,7 +632,7 @@ $.fn.checkRequired = function() {
                 }
             }
         }
-        if ($(this).is("[min]:visible") && $(this).val() > "") {
+        if ($(this).is("[min]:not([readonly],[disabled]):visible") && $(this).val() > "") {
 			var min = $(this).attr("min") * 1;
 			var minstr = $(this).val() * 1;
 			if (minstr < min) {
@@ -643,7 +643,7 @@ $.fn.checkRequired = function() {
 			}
 		}
 
-        if ($(this).is("[max]:visible")  && $(this).val() > "") {
+        if ($(this).is("[max]:not([readonly],[disabled]):visible")  && $(this).val() > "") {
 			var max = $(this).attr("max") * 1;
 			var maxstr = $(this).val() * 1;
 			if (maxstr > max) {
@@ -654,7 +654,7 @@ $.fn.checkRequired = function() {
 			}
 		}
 
-        if ($(this).is("[minlength]:visible") && $(this).val() > "") {
+        if ($(this).is("[minlength]:not([readonly],[disabled]):visible") && $(this).val() > "") {
             var minlen = $(this).attr("minlength") * 1;
             var lenstr = strlen($(this).val());
             if (lenstr < minlen) {
