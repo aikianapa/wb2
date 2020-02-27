@@ -62,12 +62,8 @@ function form__controller__common__controller(&$app)
     }
     if ($out==false) {
         $out=$app->getForm($form, $mode);
-        if (!$out) {
-            $out=$app->getForm($form, $mode.="_".$item);
-        }
-        if (!is_object($out)) {
-            return false;
-        }
+        if (!$out) $out=$app->getForm($form, $mode.="_".$item);
+        if (!is_object($out)) return false;
         $out->fetch();
         $app->dom = $out;
         return true;
@@ -75,6 +71,7 @@ function form__controller__common__controller(&$app)
     if (!is_object($out)) {
         $out=$app->fromString($out);
     }
+    $out->fetch();
     $dom=$out;
     if (isset($_REQUEST["confirm"]) and $_REQUEST["confirm"]=="true") {
         $dom->find("script[data-wb-tag=success]")->remove();

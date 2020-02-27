@@ -1,4 +1,5 @@
 <?php
+use WebPConvert\WebPConvert;
 function thumbnails__controller($app) {
   $params=$app->vars("_route.params");
 	if ($app->vars("_get")) {
@@ -57,8 +58,9 @@ function thumbnail_view($app) {
         $mime=$size["mime"];
         $cachefile=md5($file."_".$_GET["w"]."_".$_GET["h"]).".".$ext;
         $cachedir=$app->vars("_env.path_app")."/uploads/_cache/".substr($cachefile,0,2);
+        $destination = $cachedir."/".$cachefile;
         if (!is_dir($cachedir)) {$u=umask(); mkdir ( $cachedir, 0766 , true ); umask($u);}
-        if (!is_file($cachedir."/".$cachefile) OR $cache == false) {
+        if (!is_file($destination) OR $cache == false) {
 			if (class_exists("Imagick") ) {
 				$image = new \Imagick(realpath($file));
 				if ($remote) unlink($file);
@@ -67,17 +69,21 @@ function thumbnail_view($app) {
 				} else {
 				$image->thumbnailImage($_GET["w"], $_GET["h"], true);
 				}
-				file_put_contents($cachedir."/".$cachefile, $image);
+        $image->writeImage($destination);
+        if (in_array($ext,["jpg","jpeg"])) {
+            $options = [];
+            WebPConvert::convert($destination, $destination.".webp", $options);
+        }
 			} else {
 				$image=thumbnail_view_gd(realpath($file),$_GET["w"], $_GET["h"]);
 				header("Content-Type: ".$mime);
-				if ($type==3) imagepng($image,$cachedir."/".$cachefile);
-				if ($type==2) imagejpeg($image,$cachedir."/".$cachefile);
-				if ($type==1) imagegif($image,$cachedir."/".$cachefile);
-				$image=file_get_contents($cachedir."/".$cachefile);
+				if ($type==3) imagepng($image,$destination);
+				if ($type==2) imagejpeg($image,$destination);
+				if ($type==1) imagegif($image,$destination);
+				$image=file_get_contents($destination);
 			}
 		} else {
-            $image=file_get_contents($cachedir."/".$cachefile);
+            $image=file_get_contents($destination);
         }
         header("Content-Type: ".$mime);
         echo $image;

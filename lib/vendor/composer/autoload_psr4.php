@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WebPConvert\\' => array($vendorDir . '/rosell-dk/webp-convert/src'),
     'Rct567\\' => array($vendorDir . '/rct567/dom-query/src/Rct567'),
     'Nahid\\JsonQ\\' => array($vendorDir . '/nahid/jsonq/src'),
+    'ImageMimeTypeGuesser\\' => array($vendorDir . '/rosell-dk/image-mime-type-guesser/src'),
     'Adbar\\' => array($vendorDir . '/adbario/php-dot-notation/src'),
 );

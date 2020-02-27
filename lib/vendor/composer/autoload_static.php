@@ -11,6 +11,10 @@ class ComposerStaticInit10d8e36cc1cac79ce2653b63f64aad0d
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'WebPConvert\\' => 12,
+        ),
         'R' => 
         array (
             'Rct567\\' => 7,
@@ -19,6 +23,10 @@ class ComposerStaticInit10d8e36cc1cac79ce2653b63f64aad0d
         array (
             'Nahid\\JsonQ\\' => 12,
         ),
+        'I' => 
+        array (
+            'ImageMimeTypeGuesser\\' => 21,
+        ),
         'A' => 
         array (
             'Adbar\\' => 6,
@@ -26,6 +34,10 @@ class ComposerStaticInit10d8e36cc1cac79ce2653b63f64aad0d
     );
 
     public static $prefixDirsPsr4 = array (
+        'WebPConvert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rosell-dk/webp-convert/src',
+        ),
         'Rct567\\' => 
         array (
             0 => __DIR__ . '/..' . '/rct567/dom-query/src/Rct567',
@@ -33,6 +45,10 @@ class ComposerStaticInit10d8e36cc1cac79ce2653b63f64aad0d
         'Nahid\\JsonQ\\' => 
         array (
             0 => __DIR__ . '/..' . '/nahid/jsonq/src',
+        ),
+        'ImageMimeTypeGuesser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rosell-dk/image-mime-type-guesser/src',
         ),
         'Adbar\\' => 
         array (

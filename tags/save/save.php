@@ -66,7 +66,7 @@
       if ($params->remove == "true") tagSave_Remove($app);
 
       $source = $app->itemRead($form,$item);
-      if ($source) {$new = false;} else {$new = true;}
+      if ($source AND isset($source["id"])) {$new = false;} else {$new = true;}
 
       if (!$source) $source = [];
 

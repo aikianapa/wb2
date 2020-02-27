@@ -586,7 +586,7 @@ $.fn.checkRequired = function() {
 		if (label == undefined || label == "") label = $(this).attr("name");
 
         $(this).data("idx", idx);
-        if ($(this).is(":not([disabled],[type=checkbox]):visible")) {
+        if ($(this).is(":not([disabled],[min],[max],[maxlength],[type=checkbox]):visible")) {
             if ($(this).val() == "") {
                 res = false;
                 console.log("trigger: wb_required_false ["+$(this).attr("name")+"]");
@@ -666,14 +666,14 @@ $.fn.checkRequired = function() {
         }
 
         if ($(this).is("button")) {
-			if (
-				($(this).attr("value") !== undefined && $(this).val() == "")
-				||
-				($(this).attr("value")  == undefined && $(this).html() == "")
-			) {
-				res = false;
-			}
-		}
+    			if (
+    				($(this).attr("value") !== undefined && $(this).val() == "")
+    				||
+    				($(this).attr("value")  == undefined && $(this).html() == "")
+    			) {
+    				res = false;
+    			}
+		    }
     });
     if (res == true) {
 	console.log("trigger: wb_required_success");

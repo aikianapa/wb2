@@ -73,7 +73,7 @@
         $srcImg=$srcImg[count($srcImg)-1];
         $srcExt=explode(".",strtolower(trim($srcImg)));
         $srcExt=$srcExt[count($srcExt)-1];
-        $exts=array("jpg","jpeg","gif","png","svg","pdf");
+        $exts=array("jpg","jpeg","gif","png","webp","svg","pdf");
 
         if (!in_array($srcExt,$exts)) {
             $src="/engine/uploads/__system/filetypes/{$srcExt}.png";
