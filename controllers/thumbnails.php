@@ -31,8 +31,7 @@ function thumbnail_view($app) {
   $cache = true;
 	if ($app->vars("_route.http")) {$remote=true; $p="http";}
 	if ($app->vars("_route.https")) {$remote=true; $p="https";}
-  if ($app->vars("_route.params") AND in_array("nocache",array_keys($app->vars("_route.params")))) $cache=false;
-
+  if ($app->vars("_route.params.nocache")) $cache=false;
     if ($app->vars("_route.params") AND isset($app->vars("_route.params")[0])) {
         $tmp=base64_decode($app->vars("_route.params")[0]);
         if (strpos($tmp,"ttp://") OR strpos($tmp,"ttps://")) {

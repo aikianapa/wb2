@@ -1,7 +1,7 @@
 var test;
 $(document).on("filepicker-js", function() {
   wbapp.loadStyles([
-    "engine/modules/filepicker/assets/css/cropper.min.css",
+    "/engine/modules/filepicker/assets/css/cropper.min.css",
     "/engine/modules/filepicker/assets/css/fileicons.css",
     "/engine/modules/filepicker/assets/css/filepicker.css",
     "/engine/modules/filepicker/filepicker.less"
@@ -213,12 +213,14 @@ $(document).on("filepicker-init", function() {
                     $filepicker.find(".listview").html(listview());
                 }
                 $(input).html(json_encode(setdata()));
+                return false;
             });
 
             $filepicker.delegate("a.crop","click",function(){
                 var card = $(this).closest(".card");
                 var file = $(card).find("img").attr("data-src");
                 fp.plugins.crop.show(file);
+                return false;
             });
 
       });
