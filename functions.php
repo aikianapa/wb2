@@ -89,6 +89,7 @@ function wbInitSettings(&$app) {
   } else if ($_SESSION['user'] !== null) {
       $_ENV["user"] = $_SESSION['user'];
       $app->user = (object)$_ENV["user"];
+      unset($_COOKIE['user']);
       setcookie ( "user", $app->user->id,time()+3600,"/"); // срок действия час
   }
 

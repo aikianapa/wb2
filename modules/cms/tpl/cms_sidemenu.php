@@ -9,7 +9,7 @@
                       <i class="{{data.icon}}" aria-hidden="true" data-wb-where='"{{data.icon}}">""'></i>
                       {{_var.label}}
                     </a>
-                    <a href="#" data-wb="role=ajax&url={{data.link}}&html={{data.target}}" class="list-link" data-wb-where='"{{substr({{data.target}},1)}}" = "#"'>
+                    <a href="#" data-wb="role=ajax&url={{data.link}}&html={{data.target}}" class="list-link" data-wb-where='"{{substr({{data.target}},0,1)}}" = "#"'>
                       <i class="{{data.icon}}" aria-hidden="true" data-wb-where='"{{data.icon}}">""'></i>
                       {{_var.label}}
                     </a>
