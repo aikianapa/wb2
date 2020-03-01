@@ -9,33 +9,29 @@
              <i class="fa fa-user"></i> {{_LANG[lsusers]}}
            </button>
       </div>
-<div class="col-12 col-sm-6 text-right">
-     <button class="btn btn-sm btn-primary mr-2" data-wb="role=ajax&url=/form/{{_form}}/edit/_new?group=true&append=#content">
-       <i class="fa fa-users"></i> {{_LANG[addgroup]}}
-     </button>
-     <button class="btn btn-sm btn-success" data-wb="role=ajax&url=/form/{{_form}}/edit/_new&append=#content">
-       <i class="fa fa-user"></i> {{_LANG[add]}}
-     </button>
-</div>
+      <div class="col-12 col-sm-6 text-right">
+           <button class="btn btn-sm btn-primary mr-2" data-wb="role=ajax&url=/form/{{_form}}/edit/_new?group=true&append=#content">
+             <i class="fa fa-users"></i> {{_LANG[addgroup]}}
+           </button>
+           <button class="btn btn-sm btn-success" data-wb="role=ajax&url=/form/{{_form}}/edit/_new&append=#content">
+             <i class="fa fa-user"></i> {{_LANG[add]}}
+           </button>
+      </div>
     </h6>
-
-  <div class="element-box row">
+    <div id="usersList-top" class="sr-only" style="top:-50px;"></div>
+  <div class="element-box row" >
 
 
     <div class="col-sm-3">
-      <nav class="content-left">
-        <label class="content-left-label">{{_LANG[groups]}}</label>
-        <ul id="{{_form}}Catalog" data-wb="role=foreach&form=users" data-wb-if='isgroup="on" AND active="on"'
-          class="navbar navbar-light mg-t-1-force">
-          <li class="navbar-brand">
-            <a class="nav-link" href="#" data-wb="role=ajax&url=/form/users/list/{{id}}/" title="{{name}}"
-              data-wb-html="#content">
-              {{id}}
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <label class="content-left-label">{{_LANG[groups]}}</label>
+      <div class="list-group" id="{{_form}}Catalog" data-wb="role=foreach&form=users" data-wb-if='isgroup="on" AND active="on"'>
+        <a href="#usersList-top" data-wb="role=ajax&url=/form/users/list/{{id}}/" title="{{name}}"
+          data-wb-html="#content" class="list-group-item list-group-item-action">
+          {{id}}
+        </a>
+      </div>
     </div>
+
 
     <div class="col-sm-9">
 

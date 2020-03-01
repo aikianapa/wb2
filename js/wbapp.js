@@ -318,8 +318,21 @@ wbapp.alive = function() {
   },15000);
 }
 
-wbapp.alert = function(text,type="") {
-    alert(text);
+wbapp.alert = function(options) {
+  // "/engine/lib/js/toast/jquery.toast.js"
+  // "/engine/lib/js/toast/test.htm" - demo & doc
+    if ($.type(options) === "string" || $.type(options) === "number") options = {text:options};
+    var defaults = {
+       position : "top-right"
+      ,allowToastClose: true
+      ,showHideTransition: 'slide'
+      ,loader: false
+      ,icon: 'error'
+    };
+    var settings = $.extend(options,defaults);
+
+    console.log(settings,options,defaults);
+    $.toast(settings);
 }
 
 wbapp.watcherInit = function() {
@@ -335,13 +348,15 @@ wbapp.watcherInit = function() {
           if (!$(params.filter).length) {
             let msg = params.filter+" not found";
             console.log(msg);
-            wbapp.alert(msg,"warning");
+            wbapp.alert({
+                text:msg
+            });
             return;
           }
           if ($(params.filter).attr("data-wb-tpl") == undefined) {
               let msg = "Add &tpl=true to "+params.filter;
               console.log(msg);
-              wbapp.alert(msg,"warning");
+              wbapp.alert({text:msg});
               return;
           } else {
               var tpl = $(params.filter).attr("data-wb-tpl");
@@ -349,8 +364,12 @@ wbapp.watcherInit = function() {
 
           if ($(that).data("watcher_filter") == undefined) {
               $(that).off("click").on("click",function(){
-
-                  let filter = $(that).closest("form").serializeJson();
+                  let filter;
+                  if ($(that).attr("data-filter") !== undefined) {
+                    filter = $(that).parseAttr("data-filter");
+                  } else {
+                    filter = $(that).closest("form").serializeJson();
+                  }
                   let template = wbapp.tpl[tpl].html;
 
                   let data = {_tpl:template,_tplid:tpl,_filter:filter,_route:wbapp.template(tpl).params.route,_result:params.filter};
@@ -376,13 +395,13 @@ wbapp.watcherInit = function() {
           if (!$(params.change).length) {
             let msg = params.change+" not found";
             console.log(msg);
-            wbapp.alert(msg,"warning");
+            wbapp.alert({text:msg});
             return;
           }
           if ($(params.change).attr("data-wb-tpl") == undefined) {
               let msg = "Add &tpl=true to "+params.change;
               console.log(msg);
-              wbapp.alert(msg,"warning");
+              wbapp.alert({text:msg});
               return;
           } else {
               var tpl = $(params.change).attr("data-wb-tpl");
@@ -407,7 +426,6 @@ wbapp.watcherInit = function() {
       }
 
       var watcher_watcher = function(that) {
-                params.create = function(item,data) { $(document).find(params.watcher).prepend(data); }
                 params.update = function(item,data) {
                     let $tpl = $(document).find("[data-wb-tpl='"+tpl+"']");
                     if ($tpl.find("[data-watcher='item="+item+"']").length) {
@@ -472,7 +490,7 @@ wbapp.watcherCheck = function(params) {
     if (params.remove == "true") mode = "remove";
     if (params.result.new == true) {
         mode = "create";
-        item = params.result.id;
+//        item = params.result.id;
     }
 
     if (params.watcher == undefined) {
@@ -491,9 +509,7 @@ wbapp.watcherCheck = function(params) {
 
         if (mode == "update") wbapp.watcher[tpl].update(watch,result);
         if (mode == "remove") wbapp.watcher[tpl].remove(item,result);
-        if (mode == "create" && wbapp.watcher[tpl] !== undefined) {
-            wbapp.watcher[tpl].create(item,result);
-        } else if (mode == "create") {
+        if (mode == "create") {
             $(document).find(params.watcher).prepend(result);
         }
 
@@ -676,7 +692,7 @@ $.fn.checkRequired = function() {
 		    }
     });
     if (res == true) {
-	console.log("trigger: wb_required_success");
+	       console.log("trigger: wb_required_success");
         $(document).trigger("wb_required_success", [form]);
     }
     if (res == false) {
@@ -718,6 +734,40 @@ wbapp.eventsInit = function() {
         document.location.href = "/";
     });
 
+    $(document).on("wb_required_false",function(e,tag){
+        let name = $(tag).attr("name")
+        wbapp.alert("Field: [" + name + "] required");
+    });
+
+    $(document).on("wb_required_fail",function(e,tag){
+        wbapp.alert("Please, check form!");
+    });
+
+}
+
+wbapp.furl = function(str) {
+  str = str.replace(/[^а-яА-Яa-zA-Z0-9_-]{1,}/gm, "_");
+  str = str.replace(/[__]{1,}/gm, "_");
+  str = wbapp.transilt(str);
+  return str;
+}
+
+wbapp.transilt = function(word){
+    var answer = "";
+    var a = {}
+
+    a["Ё"]="YO";a["Й"]="I";a["Ц"]="TS";a["У"]="U";a["К"]="K";a["Е"]="E";a["Н"]="N";a["Г"]="G";a["Ш"]="SH";a["Щ"]="SCH";a["З"]="Z";a["Х"]="H";a["Ъ"]="'";
+    a["ё"]="yo";a["й"]="i";a["ц"]="ts";a["у"]="u";a["к"]="k";a["е"]="e";a["н"]="n";a["г"]="g";a["ш"]="sh";a["щ"]="sch";a["з"]="z";a["х"]="h";a["ъ"]="'";
+    a["Ф"]="F";a["Ы"]="I";a["В"]="V";a["А"]="a";a["П"]="P";a["Р"]="R";a["О"]="O";a["Л"]="L";a["Д"]="D";a["Ж"]="ZH";a["Э"]="E";
+    a["ф"]="f";a["ы"]="i";a["в"]="v";a["а"]="a";a["п"]="p";a["р"]="r";a["о"]="o";a["л"]="l";a["д"]="d";a["ж"]="zh";a["э"]="e";
+    a["Я"]="Ya";a["Ч"]="CH";a["С"]="S";a["М"]="M";a["И"]="I";a["Т"]="T";a["Ь"]="'";a["Б"]="B";a["Ю"]="YU";
+    a["я"]="ya";a["ч"]="ch";a["с"]="s";a["м"]="m";a["и"]="i";a["т"]="t";a["ь"]="'";a["б"]="b";a["ю"]="yu";
+
+    for (i = 0; i < word.length; ++i){
+
+        answer += a[word[i]] === undefined ? word[i] : a[word[i]];
+    }
+    return answer;
 }
 
 $.fn.jsonVal = function(data = undefined) {
@@ -779,6 +829,13 @@ $.fn.serializeJson = function(data = {}) {
   return data;
 }
 
+$.fn.parseAttr = function(attr) {
+    let val = $(this).attr(attr);
+    if (val == undefined) return;
+    let json = json_decode(val);
+    if (json) return json;
+    return $.parseParams(val);
+}
 
 function wb_ajaxWait(ajaxObjs, fn) {
   if (!ajaxObjs) return;
@@ -871,7 +928,11 @@ function getcookie(cookie_name) {
 }
 
 setTimeout(function(){
-    wbapp.loadScripts(["/engine/js/php.js"], "wbapp-js", function() {
+    wbapp.loadStyles(["/engine/lib/js/toast/jquery.toast.css"]);
+    wbapp.loadScripts([
+      "/engine/js/php.js",
+      "/engine/lib/js/toast/jquery.toast.js"
+    ], "wbapp-js", function() {
       console.log("Trigger: wbapp-js");
       wbapp.settings = wbapp.getWait("/ajax/settings");
       wbapp.init();

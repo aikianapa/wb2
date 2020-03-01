@@ -34,7 +34,7 @@
 
   <template id="fp-listviewItem">
     <div class="card p-2">
-      <img class="card-img-top" src="/thumb/200x200/src/%url%" data-src="%url%" data-img='%name%' title="%title%" alt="%alt%">
+      <img class="card-img-top" src="/thumb/200x200/src/%url%?nocache=true" data-src="%url%" data-img='%name%' title="%title%" alt="%alt%">
       <div class="card-body">
         <a href="#" class="action action-primary crop"><i class="fa fa-crop"></i></a>
         <a href="#" class="action action-danger delete pull-right"><i class="fa fa-trash-o text-danger"></i></a>

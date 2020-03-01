@@ -18,7 +18,7 @@
         {{_SRV[HTTP_HOST]}}/
       </span>
       </div>
-      <input data-wb="role=module&name=smartid" type="text" class="form-control" name="id" placeholder="{{_LANG[page]}}" >
+      <input data-wb="role=module&load=smartid" type="text" class="form-control" name="id" placeholder="{{_LANG[page]}}" >
     </div>
 	</div>
 

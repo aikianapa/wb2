@@ -2125,15 +2125,10 @@ function wbAuthGetContents($url,$get=null,$username=null,$password=null) {
                     'content'=>$get
                 )
             );
-    $context = stream_context_create($opts);
-    $handle = @fopen($url, 'r', false, $context);
-
-    if (!$handle) {
-        print_r ($http_response_header[0]);
-        return false;
-    }
-
-    return stream_get_contents($handle);
+            $context = stream_context_create($opts);
+            session_write_close();
+            $result = file_get_contents($url, false, $context);
+            return $result;
 }
 
 function wbAuthPostContents($url, $post=null, $username=null,$password=null) {
@@ -2149,11 +2144,12 @@ function wbAuthPostContents($url, $post=null, $username=null,$password=null) {
     $opts = array(
                 'http'=>array(
                     'method'=>'POST',
-                    'header'=>$cred,
+                    'header'=>$cred."\r\nCookie: ".session_name()."=".session_id()."\r\n",
                     'content'=>$post
                 )
             );
     $context = stream_context_create($opts);
+    session_write_close();
     $result = file_get_contents($url, false, $context);
     return $result;
 }
@@ -2338,10 +2334,10 @@ function wbListForms($exclude = true)
     $list = array();
     $eList = wbListFilesRecursive($_ENV['path_engine'].'/forms', true);
     $aList = wbListFilesRecursive($_ENV['path_app'].'/forms', true);
+    $jList = wbListFilesRecursive($_ENV['path_app'].'/database', true);
     $arr = $eList;
-    foreach ($aList as $a) {
-        $arr[] = $a;
-    }
+    foreach ($aList as $a) $arr[] = $a;
+    foreach ($jList as $a) $arr[] = $a;
     unset($eList,$aList);
     foreach ($arr as $i => $data) {
         $name = $data['file'];
@@ -2360,7 +2356,7 @@ function wbListForms($exclude = true)
                 $flag = false;
             }
         }
-        if (('php' == $ext or 'htm' == $ext) && !$inc && true == $flag && $name > '' && !in_array($name, $list, true)) {
+        if (('php' == $ext or 'htm' == $ext or 'json' == $ext) && !$inc && true == $flag && $name > '' && $name !== "admin" && !in_array($name, $list, true)) {
             $list[] = $name;
         }
     }

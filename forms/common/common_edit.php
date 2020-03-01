@@ -39,7 +39,7 @@
 
 	<div class="form-group row">
 		<label class="col-sm-2 form-control-label">{{_lang.visible}}</label>
-		<div class="col-sm-2"><label class="switch switch-success"><input type="checkbox" name="active"><span></span></label></div>
+		<div class="col-sm-2"><label class="switch"><input type="checkbox" name="active"><span></span></label></div>
 	</div>
 
 

@@ -95,7 +95,7 @@ function login__recover(&$app) {
 function modLoginSuccess(&$app,$user) {
     if ($user->avatar > "") {
         if ($user->avatar->length) $user->avatar = $user->avatar[0];
-        $user["avatar"]="/uploads/users/{$user->id}/{$user->avatar->img}";
+        $user->avatar="/uploads/users/{$user->id}/{$user->avatar->img}";
     } else {
         $user->avatar = "/engine/tpl/img/person.svg";
     }
