@@ -151,6 +151,9 @@ wbapp.save = function(that,params) {
     wbapp.watcherCheck(params);
     console.log("Trigger: wb-save-done");
     $(that).trigger("wb-save-done");
+  } else {
+    console.log("Trigger: wb-save-fail");
+    $(that).trigger("wb-save-fail");
   }
 }
 
@@ -322,16 +325,15 @@ wbapp.alert = function(options) {
   // "/engine/lib/js/toast/jquery.toast.js"
   // "/engine/lib/js/toast/test.htm" - demo & doc
     if ($.type(options) === "string" || $.type(options) === "number") options = {text:options};
-    var defaults = {
+    let defaults = {
        position : "top-right"
       ,allowToastClose: true
       ,showHideTransition: 'slide'
       ,loader: false
       ,icon: 'error'
     };
-    var settings = $.extend(options,defaults);
-
-    console.log(settings,options,defaults);
+    let settings = $.extend(defaults,options);
+    console.log(settings);
     $.toast(settings);
 }
 
@@ -730,17 +732,36 @@ wbapp.eventsInit = function() {
         }
     });
 
+    $(document).off("event_user_signout");
     $(document).on("event_user_signout",function(e,params){
         document.location.href = "/";
     });
 
+    $(document).off("wb_required_false");
     $(document).on("wb_required_false",function(e,tag){
         let name = $(tag).attr("name")
         wbapp.alert("Field: [" + name + "] required");
     });
 
-    $(document).on("wb_required_fail",function(e,tag){
+    $(document).off("wb_required_fail");
+    $(document).on("wb_required_fail",function(e){
         wbapp.alert("Please, check form!");
+    });
+
+    $(document).off("wb-save-done");
+    $(document).on("wb-save-done",function(e){
+        wbapp.alert({
+           text: wbapp.settings.sysmsg.saved
+          ,icon: 'success'
+        });
+    });
+
+    $(document).off("wb-save-fail");
+    $(document).on("wb-save-fail",function(e){
+        wbapp.alert({
+           text: wbapp.settings.sysmsg.save_failed
+          ,icon: 'error'
+        });
     });
 
 }
