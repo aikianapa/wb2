@@ -1,1 +1,3 @@
-<link data-append="head" rel="stylesheet" href="/engine/lib/fonts/materialicons/materialicons.css">
+<script type="wbapp">
+    wbapp.loadStyles(["/engine/lib/fonts/materialicons/materialicons.css"],"materialicons-css");
+</script>

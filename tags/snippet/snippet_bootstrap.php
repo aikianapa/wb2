@@ -3,5 +3,5 @@
     wbapp.loadScripts([
       "/engine/lib/js/popper/popper.min.js",
       "/engine/lib/bootstrap/js/bootstrap.min.js"
-    ]);
+    ],"bootstrap-js");
 </script>

@@ -4,7 +4,7 @@
 <script append="body" src="/engine/js/wbapp.js"></script>
 <script type="wbapp">
   $(document).on("bootstrap-css",function(){
-      wbapp.loadStyles(["/engine/css/wbapp.less"]);
+      wbapp.loadStyles(["/engine/css/wbapp.less"],"wbapp-css");
   });
 </script>
 <div id="wb-loading"></div>
