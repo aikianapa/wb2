@@ -333,7 +333,6 @@ wbapp.alert = function(options) {
       ,icon: 'error'
     };
     let settings = $.extend(defaults,options);
-    console.log(settings);
     $.toast(settings);
 }
 
@@ -951,6 +950,8 @@ function getcookie(cookie_name) {
 setTimeout(function(){
     wbapp.loadStyles(["/engine/lib/js/toast/jquery.toast.css"]);
     wbapp.loadScripts([
+      "/engine/js/jquery.cookie.js",
+      "/engine/js/jquery-ui.min.js",
       "/engine/js/php.js",
       "/engine/lib/js/toast/jquery.toast.js"
     ], "wbapp-js", function() {

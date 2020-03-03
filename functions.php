@@ -141,8 +141,8 @@ function wbInitSettings(&$app) {
   $_ENV['settings']['max_upload_size'] = wbMaxUplSize();
   $_ENV['sysmsg'] = wbGetSysMsg();
   $_ENV['settings']['sysmsg'] = &$_ENV['sysmsg']; // для доступа из JS
-  $app->vars("_sett.user",$_SESSION["user"]);
-  $app->vars("_sett.password",null);
+  $_ENV['settings']['user'] = $_SESSION["user"];
+  unset($_ENV['settings']['user']['password']);
   if ($app->vars("_sett.user")) $app->vars("_sett.user.group", wbItemRead("users",$app->vars("_sett.user.role")));
   if (!$app->vars("_cookie.events")) setcookie ( "events", base64_encode(json_encode([])),time()+3600,"/"); // срок действия час
 }
