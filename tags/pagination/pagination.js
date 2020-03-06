@@ -1,5 +1,15 @@
 $(document).one("pagination-js", function() {
 
+  $(document).find(".pagination .page-more[data-trigger]").each(function(){
+      var more = this;
+      var selector = $(this).attr("data-trigger");
+
+      $(document).find(selector).on("click tap",function(){
+          $(more).find(".page-link").trigger("click");
+      });
+
+  });
+
   $(document).delegate(".pagination .page-link", "click", function(e) {
     e.preventDefault();
     var paginator = $(this).closest(".pagination");
@@ -24,11 +34,13 @@ $(document).one("pagination-js", function() {
 
 
   $.fn.wbPagination = function() {
-    console.log("Pagination: Click");
     var paginator = $(this).closest(".pagination");
     var that = $(this);
     var id = $(paginator).attr("id");
     var tid = $(paginator).attr("id").split("-")[1];
+
+    console.log("Trigger: pagination-click");
+    $(document).trigger("pagination-click",that);
 
 
     //=======//
@@ -49,7 +61,8 @@ $(document).one("pagination-js", function() {
     wbapp.watcher[tpl].page(result);
 //    window.location.hash = "page-" + idx + "-" + pagenum;
     $("body").removeClass("cursor-wait");
-
+    console.log("Trigger: pagination-done");
+    $(document).trigger("pagination-done",page,tpl,result);
 
 
 

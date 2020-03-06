@@ -18,7 +18,6 @@ class wbDom extends DomQuery
         } elseif ($Item !== null) {
             $this->data = $Item;
         }
-
         $this->fetchParams();
         if ($this->params->allow === false) {
           $this->remove(); return $this;
@@ -161,6 +160,140 @@ class wbDom extends DomQuery
         }
         return false;
     }
+
+
+    public function dataProcessor() {
+        $data=array();
+        $grps=array();
+        $total=array();
+        $grand=array();
+        if ($this->params->group) $groups = wbAttrToArray($this->params->group);
+        if ($this->params->total) $totals = wbAttrToArray($this->params->total);
+        if ($this->params->supress == "true") {
+            $sup=true;
+        } else {
+            $sup=false;
+        }
+        $lines=$this->find("tr");
+        $index=0;
+        foreach ($lines as $tr) {
+            unset($grp_id,$grpidx);
+            $fields=$tr->find("td[data-wb-fld]:not([data-wb-eval])");
+            $Item=array();
+            foreach($fields as $field) {
+                $Item[$field->attr("data-wb-fld")]=$field->text();
+            }
+            $fields=$tr->find("[data-wb-eval]");
+            foreach($fields as $field) {
+                $evalStr=wbSetValuesStr($field,$Item);
+                eval ("\$tmp = ".$field->text().";");
+                $field->text($tmp);
+            }
+            foreach($groups as $group) {
+                $grp_text=$tr->find("[data-wb-fld='{$group}']")->text();
+                if (!isset($grp_id)) {
+                    $grp_id=$grp_text;
+                }
+                else {
+                    $grp_id.="|".$grp_text;
+                }
+                if (!isset($grpidx)) {
+                    $grpidx=$group;
+                }
+                else {
+                    $grpidx.="|".$group;
+                }
+                if (!isset($grps[$grp_id])) {
+                    $grps[$grp_id]=array("data"=>array(),"total"=>array());
+                }
+                $grps[$grp_id]["grpidx"]=$grpidx;
+                $grps[$grp_id]["data"][]=$index;
+                if (isset($totals)) {
+                    foreach($totals as $totfld) {
+                        $totval=$tr->find("[data-wb-fld='{$totfld}']")->text()*1;
+                        if (!isset($grps[$grp_id]["total"][$totfld])) {
+                            $grps[$grp_id]["total"][$totfld]=0;
+                        }
+                        $grps[$grp_id]["total"][$totfld]+=$totval;
+                        if (!isset($grand[$totfld])) {
+                            $grand[$totfld]=0;
+                        }
+                        if ($group==$groups[0]) $grand[$totfld]+=$totval;
+                    }
+                }
+            }
+            $index++;
+        }
+        ksort($grps);
+        $grps=array_reverse($grps,true);
+        $tbody = $this->app->fromString("<tbody type='result'></tbody>");
+        $ready=array();
+        foreach($grps as $grpid => $grp) {
+            $inner="";
+            $count=count($grp["data"])-1;
+            foreach($grp["data"] as $key => $idx) {
+                if (!in_array($idx,$ready)) {
+                    $tpl = $this->find("tr:eq({$idx})")->outerHtml();
+                    if ($sup==false) $tbody->append($tpl);
+                }
+                if ($key==$count AND count($grp["total"])>0) {
+                    // выводим тоталы группы
+                    $trtot=wbFromString("<tr>".$this->find("tr:eq({$idx})")->html()."</tr>");
+                    $totchk=array();
+                    foreach($grp["total"] as $fld => $total) {
+                        $trtot->find("td[data-wb-fld={$fld}]")->html($total);
+                        $totchk[]=$fld;
+                    }
+                    $trtot->find("tr")->attr("data-wb-group",$grp["grpidx"]);
+                    $trtot->find("tr")->attr("data-wb-group-value",$grpid);
+                    $trtot->find("tr")->addClass("data-wb-total success");
+                    $grpchk=explode("|",$grp["grpidx"]);
+                    $tmp=$trtot->find("td:not([data-wb-fld])");
+                    foreach($tmp as $temp) {
+                        $temp->html("");
+                    }
+                    $tdflds=$trtot->find("td[data-wb-fld]");
+                    foreach($tdflds as $tdfld) {
+                        $data_fld=$tdfld->attr("data-wb-fld");
+                        if (!in_array($data_fld,$grpchk) && !in_array($data_fld,$totchk)) {
+                            $tdfld->html("");
+                        }
+                        if (in_array($data_fld,$grpchk)) {
+                            $tdfld->addClass("data-wb-group");
+                        }
+                        if (in_array($data_fld,$totchk)) {
+                            $tdfld->addClass("data-wb-total");
+                        }
+                    }
+                    $inner.=$trtot->outerHtml();
+
+                }
+                $ready[]=$idx;
+            }
+            $tbody->append($inner);
+        }
+        // выводим общий итог
+        if (isset($grp["total"]) && count($grp["total"])>0) {
+            $grtot=wbFromString("<tr>".$this->find("tr:eq({$idx})")->html()."</tr>");
+            $grtot->find("tr")->addClass("data-wb-grand-total info");
+            $tmp=$grtot->find("td");
+            foreach($tmp as $temp) {
+                $temp->html("");
+            }
+            $grflds=$grtot->find("td[data-wb-fld]");
+            foreach($grflds as $grfld) {
+                $data_fld=$grfld->attr("data-wb-fld");
+                if (in_array($data_fld,$totchk)) {
+                    $grfld->html($grand[$data_fld]);
+                    $grfld->addClass("data-wb-total");
+                }
+            }
+            $tbody->append($grtot);
+        }
+        $this->html($tbody->innerHtml());
+    }
+
+
 
     public function addTpl($real = true) {
       if ($this->params->tpl !== "true") return;
@@ -864,9 +997,7 @@ class wbApp
 
     public function fromString($string="", $isDocument = false)
     {
-        if ($string==null) {
-            $string="";
-        }
+        if ($string==null) $string="";
         if ($isDocument == true && !strpos(" ".$string, "<html")) {
             $string = "<html class='wb-html'>{$string}</html>";
         }

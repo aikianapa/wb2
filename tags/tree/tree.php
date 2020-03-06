@@ -2,13 +2,14 @@
 function tagTree(&$dom, $Item=null) {
     if ($dom->hasClass("wb-done")) return;
     if ($Item == null) $Item=$dom->data;
-    if (!is_array($Item)) $Item=array($Item);
+    if (!((array)$Item === $Item) ) $Item=array($Item);
         $name = $dom->params->name;
         $from = $dom->params->from;
         $form = $dom->params->form;
         $item = $dom->params->item;
         $type = $dom->params->type;
         $field = $dom->params->field;
+
         $srcData = $Item;
         if (!$name) $name=$dom->params->name = $dom->attr("name");
 
@@ -126,7 +127,7 @@ class tagTreeSelect {
             if ($app->vars("_post._filter") && $flag) $flag = $app->filterItem($item);
             if ($flag == true) $this->select->append($line);
 
-            if ((isset($item["children"]) AND is_array($item["children"]) AND count($item["children"]))) {
+            if (isset($item["children"]) AND (array)$item["children"] === $item["children"] AND count($item["children"])) {
 
                 if ($this->lvl > 0) $this->parent = true;
                 $option = new tagTreeSelect();
@@ -171,7 +172,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
         $level=-1;
         $idx=0;
         $tree=$Item;
-        if ($dom->params->branch > "") {$branch = $dom->params->branch;} else {$branch = 0;}
+        if ($dom->params->branch > "") {$branch = $dom->params->branch;} else {$branch = null;}
         if ($dom->params->parent == "false") {$parent = 0;} else {$parent=1;}
         if ($dom->params->limit > "") {$limit = intval($dom->params->limit);}
         $parent_id="";
@@ -184,10 +185,8 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
         if ($param==null) {
             $name=$dom->attr("name");
             if (isset($from)) $name=$from;
-            $tree = wbItemToArray($Item);
-            if (isset($call) AND $call > "" AND is_callable($call)) {
-                $tree=@$call();
-            }
+            // /$tree = wbItemToArray($Item);
+            if (isset($call) AND $call > "" AND is_callable($call)) $tree=@$call();
             if (isset($rand) AND $rand=="true") {$rand=true;}
             if (!isset($limit) OR $limit=="false" OR intval($limit) < 0) {
                 $limit=-1;
@@ -198,26 +197,23 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
             $tpl = $dom->html();
         } else {
             foreach($param as $k =>$val) $$k=$val;
-            $tree=$Item;
         }
         if (!isset($level)) $level="";
         $dom->html("");
-        if ($branch !== 0) {
+        if ($branch) {
     			if ($tree==NULL AND $branch>"") {
     				$tree=wbTreeFindBranch($Item["children"],$branch);
     			} else {
     				$tree=wbTreeFindBranch($tree,$branch);
     			}
         }
-
-
         $idx=0;
 
-        if ((array)$tree === $tree) {
+      if ((array)$tree === $tree) {
 			if ($rand==true) shuffle($tree);
             foreach($tree as $i => $item) {
                 if (!((array)$item === $item)) $item = (array)$item;
-                $item["_parent"]=$Item;
+                $item["_parent"]=$tree;
                 $lvl++;
                 $item=(array)$srcVal + (array)$item;
                 $item["_pid"]=$parent_id;
@@ -228,7 +224,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
                 $line=$dom->app->fromString($tpl);
                 $child=$dom->app->fromString($tpl,true);
                 $line->fetch($item);
-                if ($parent==0 OR (isset($item["children"]) AND is_array($item["children"]) AND count($item["children"]))) {
+                if ($parent==0 OR (isset($item["children"]) AND (array)$item["children"] === $item["children"] AND count($item["children"]))) {
                     if ($pardis==1 AND ($limit!==$lvl-1)) {
                         $line->attr("disabled",true);
                     }

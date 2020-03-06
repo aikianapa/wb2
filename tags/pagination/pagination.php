@@ -75,6 +75,7 @@ function tagPagination(&$dom)
             $pag->find("[data-page='prev']")->remove();
             $pag->find("[data-page!='more']")->css("display","none");
             if (isset($more[1]) && $more[1]>" ") $pag->find("[data-page='more'] .page-link")->html($more[1]);
+            if ($more[0] !== "true") $pag->find("[data-page='more']")->attr("data-trigger",$more[0])->css("display","none");
         } else {
             $pag->find("[data-page='more']")->remove();
         }

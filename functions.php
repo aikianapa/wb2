@@ -930,7 +930,7 @@ function wbTreeFindBranchById($Item, $id)
     if (is_array($Item)) {
         foreach ($Item as $item) {
             if ($item['id'] === $id) return $item;
-            if (is_array($item['children'])) {
+            if ((array)$item['children'] === $item['children']) {
                 $res = wbTreeFindBranchById($item['children'], $id);
                 if ($res) return $res;
             }
@@ -942,15 +942,16 @@ function wbTreeFindBranchById($Item, $id)
 function wbTreeFindBranch($tree, $branch = '', $parent = 'true', $childrens = 'true')
 {
     //$tree=wbItemToArray($tree);
-    if ($branch > '') {
-        $branch = html_entity_decode($branch);
-        $br = explode('->', $branch);
-        foreach ($br as $b) {
-            $tree = array(wbTreeFindBranchById($tree, rtrim(ltrim($b))));
-        }
-        if ('false' == $childrens) unset($tree['children']);
-        if ('false' == $parent) $tree = $tree[0]['children'];
+    if (trim($branch) == '') return $tree;
+    $branch = html_entity_decode($branch);
+    $br = explode('->', $branch);
+    foreach ($br as $b) {
+        $tree = array(wbTreeFindBranchById($tree, rtrim(ltrim($b))));
     }
+
+    if ('false' == $childrens) unset($tree['children']);
+    if ('false' == $parent) $tree = $tree[0]['children'];
+
     return $tree;
 }
 
@@ -2195,6 +2196,7 @@ function wbAttrAddData($data, $Item, $mode = false)
 function wbGetWords($str, $w = 100)
 {
     $res = '';
+    $str = html_entity_decode(strip_tags(trim($str)));
     $arr = explode(' ', trim($str));
     for ($i = 0; $i <= $w; ++$i) {
         if (isset($arr[$i])) {
@@ -2628,7 +2630,7 @@ return $result;
         			die;
             }
         }
-        $res = eval('return '.$func.';');
+        $res = eval('return '.$func.'();');
         return $res;
     }
 

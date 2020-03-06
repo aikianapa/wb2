@@ -68,9 +68,7 @@ function tagForeach(&$dom,$Item=null) {
             }
         }
 
-      if ($dom->params->call) {
-          $Item = $dom->app->callFunc($dom->params->call."");
-      }
+      if ($dom->params->call) $Item = $dom->app->callFunc($dom->params->call);
 
 // get items from table
         if (isset($dom->params->form) AND in_array($dom->params->form,$_ENV["forms"])) {
@@ -152,6 +150,7 @@ function tagForeach(&$dom,$Item=null) {
                       }
                       $tmptpl=$dom->app->fromString($dom->tpl,true);
                       $tmptpl->data = $val;
+                      if ($dom->params->walk) $val = $tmptpl->data = call_user_func_array($dom->params->walk,[$val]);
                       $tmptpl->fetch();
                       $tmptpl = $tmptpl->html();
                       if (trim($tmptpl) > "" ) {
@@ -192,8 +191,8 @@ function tagForeach(&$dom,$Item=null) {
             } else {
                 $dom->html($inner);
             }
-            if ($dom->attr("data-wb-group")>"" OR $dom->attr("data-wb-total")>"") {
-                //$dom->wbTableProcessor();
+            if ($dom->params->group OR $dom->params->total) {
+                $dom->dataProcessor();
                 $size=false;
             }
             if ($size AND !$dom->hasClass("pagination")) {

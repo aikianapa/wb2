@@ -468,11 +468,17 @@ wbapp.watcherInit = function() {
 
     $(document).find("[data-wb-tpl]:not(.wb-multiinput)").each(function() {
         // fix for pagination without data-watcher attribute
+        let more = params.more;
         let tpl = $(this).attr("data-wb-tpl");
         if ($(document).find("#ajax-"+tpl).length && wbapp.watcher[tpl] == undefined) {
               let params = {};
               params.page = function(data) {
-                    $(document).find("[data-wb-tpl='"+tpl+"']").html(data);
+                    if  (more !== undefined && more !== "false") {
+                        $(document).find("[data-wb-tpl='"+tpl+"']").append(data);
+                    } else {
+                        $(document).find("[data-wb-tpl='"+tpl+"']").html(data);
+                    }
+
               }
               wbapp.watcher[tpl] = params;
         }
