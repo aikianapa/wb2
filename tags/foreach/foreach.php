@@ -117,10 +117,9 @@ function tagForeach(&$dom,$Item=null) {
 
         $tplId = $dom->addTpl(false);
         if ($dom->attr("data-filter") > "") {
-            $filter=json_decode($dom->attr("data-filter"),true);
-            if (!isset($_POST["_filter"])) {
-                $_POST["_filter"] = $filter;
-            }
+          $filter= $dom->attr("data-filter");
+            $filter=json_decode($filter,true);
+            if (!isset($_POST["_filter"])) $_POST["_filter"] = $filter;
         }
 
         foreach($Item as $key => $val) {

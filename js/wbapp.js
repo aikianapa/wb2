@@ -411,8 +411,14 @@ wbapp.watcherInit = function() {
               $(that).off("change").on("change",function(){
                   let template = wbapp.tpl[tpl].html;
                   let val = $(that).val();
-                  if ($(that).is("select") && params.value > "") val = $(that).find("option:selected").attr("data-"+params.value);
-                  template = str_replace("%value%",val,template);
+                  if ($(that).is("select") && params.value > "") {
+                    val = $(that).find("option:selected").attr("data-"+params.value);
+                  } else if ($(that).is("select")) {
+                    val = $(that).val();
+                    if ($(this).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
+                    template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
+                  }
+                  template = str_replace('%value%',val,template);
 
                   var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route});
                   if (result.result !== undefined) {

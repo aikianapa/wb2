@@ -790,8 +790,10 @@ class wbApp
             if ($val !== "" AND in_array(substr($fld,-5),["__min","__max"])) {
                 if (substr($fld,-5) == "__min" AND $val > $vars->get(substr($fld,0,-5))) return false;
                 if (substr($fld,-5) == "__max" AND $val < $vars->get(substr($fld,0,-5))) return false;
-            } else if ($val !== "" AND $vars->get($fld) !== $val) {
-               return false;
+            } else if ($val !== "" AND (string)$val === $val AND $vars->get($fld) !== $val) {
+                return false;
+            } else if ((array)$val === $val AND !in_array($vars->get($fld),$val) ) {
+                return false;
             }
 
         }
