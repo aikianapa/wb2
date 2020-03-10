@@ -132,7 +132,9 @@ final class wbRouter {
         elseif (isset($_SERVER["SCHEME"]) && $_SERVER["SCHEME"]>"") {
             $scheme=$_SERVER["SCHEME"];
         }
-        else {
+        else if (isset($_SERVER["HTTPS"]) AND $_SERVER["HTTPS"] == "on") {
+            $scheme="https";
+        } else {
             $scheme="http";
         }
         $_ENV["route"]["scheme"]=$scheme;

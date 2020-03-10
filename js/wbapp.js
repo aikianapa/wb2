@@ -6,7 +6,9 @@ wbapp.loadScripts = function(scripts = [], trigger = null, func = null) {
   if (wbapp.loadedScripts == undefined) wbapp.loadedScripts = [];
   let i = 0;
   scripts.forEach(function(src) {
-    if (wbapp.loadedScripts.indexOf(src) !== -1) {
+    let name = src.split("/");
+    name = name[name.length-1];
+    if (wbapp.loadedScripts.indexOf(name) !== -1) {
       i++;
       if (i >= scripts.length) {
         if (func !== null) return func(scripts);
@@ -22,7 +24,8 @@ wbapp.loadScripts = function(scripts = [], trigger = null, func = null) {
       script.async = false;
       script.onload = function() {
         i++;
-        wbapp.loadedScripts.push(src);
+        console.log("Script loaded: " + name);
+        wbapp.loadedScripts.push(name);
         if (i >= scripts.length) {
           if (func !== null) return func(scripts);
           if (trigger !== null) {
@@ -408,25 +411,28 @@ wbapp.watcherInit = function() {
               var tpl = $(params.change).attr("data-wb-tpl");
           }
           if ($(that).data("watcher_change") == undefined) {
-              $(that).off("change").on("change",function(){
-                  let template = wbapp.tpl[tpl].html;
-                  let val = $(that).val();
-                  if ($(that).is("select") && params.value > "") {
-                    val = $(that).find("option:selected").attr("data-"+params.value);
-                  } else if ($(that).is("select")) {
-                    val = $(that).val();
-                    if ($(this).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
-                    template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
-                  }
-                  template = str_replace('%value%',val,template);
+              if ($(that).data("watcher_change") == undefined) {
+                  $(that).on("change",function(){
+                      let template = wbapp.tpl[tpl].html;
+                      let val = $(that).val();
+                      if ($(that).is("select") && params.value > "") {
+                        val = $(that).find("option:selected").attr("data-"+params.value);
+                      } else if ($(that).is("select")) {
+                        val = $(that).val();
+                        if ($(this).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
+                        template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
+                      }
+                      template = str_replace('%value%',val,template);
 
-                  var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route});
-                  if (result.result !== undefined) {
-                      $(params.change).html(result.result).trigger("change");
-                  }
-                  console.log("Trigger: watcher_change");
-                  $(document).trigger("watcher_change",params.change,result);
-              });
+                      var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route});
+                      if (result.result !== undefined) {
+                          $(params.change).html(result.result).trigger("change");
+                      }
+                      console.log("Trigger: watcher_change");
+                      $(document).trigger("watcher_change",params.change,result);
+                  });
+                  $(that).data("watcher_change",true);
+              }
               $(that).data("watcher_change",true);
               $(that).trigger("change");
           }
@@ -525,14 +531,10 @@ wbapp.watcherCheck = function(params) {
         if (mode == "create") {
             $(document).find(params.watcher).prepend(result);
         }
-
-
-
-        wbapp.init()  ;
+        wbapp.init();
         console.log("Trigger: wb-watcher-done");
         $(document).trigger("wb-watcher-done",params);
     }
-    return false;
 }
 
 wbapp.wbappScripts = function() {
@@ -715,24 +717,27 @@ $.fn.checkRequired = function() {
     return res;
 }
 
-
 wbapp.eventsInit = function() {
-    $(document).undelegate(":checkbox","change");
-    $(document).delegate(":checkbox","change",function(){
-        $(this).val("");
-        if ($(this).prop("checked") == true) $(this).val("on");
-    });
+    if (wbapp.evInit == undefined ) {
 
-    $(document).undelegate("select","change");
-    $(document).delegate("select","change",function(){
-        if ($(this).attr("data-wb-value") !== undefined) {
-            $(this).val( $(this).attr("data-wb-value") );
-            $(this).removeAttr("data-wb-value");
-        }
-        let val = $(this).val();
-        $(this).find("option").removeAttr("selected");
-        $(this).find("option[value='"+val+"']").prop("selected",true).attr("selected",true);
-    });
+      $(document).delegate(":checkbox","change",function(){
+          $(this).val("");
+          if ($(this).prop("checked") == true) $(this).val("on");
+      });
+
+      $(document).delegate("select:not([multiple])","change",function(){
+          if ($(this).attr("data-wb-value") !== undefined) {
+              $(this).val( $(this).attr("data-wb-value") );
+              $(this).removeAttr("data-wb-value");
+          }
+          let val = $(this).val();
+          $(this).find("option").removeAttr("selected");
+          $(this).find("option[value='"+val+"']").prop("selected",true).attr("selected",true);
+      });
+      wbapp.evInit = true;
+    }
+
+
 
     $(document).off("event");
     $(document).on("event",function(e,ev){

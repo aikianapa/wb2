@@ -143,6 +143,7 @@ function wbInitSettings(&$app) {
   $_ENV['settings']['sysmsg'] = &$_ENV['sysmsg']; // для доступа из JS
   $_ENV['settings']['user'] = $_SESSION["user"];
   unset($_ENV['settings']['user']['password']);
+  $app->vars("_sett",$_ENV["settings"]);
   if ($app->vars("_sett.user")) $app->vars("_sett.user.group", wbItemRead("users",$app->vars("_sett.user.role")));
   if (!$app->vars("_cookie.events")) setcookie ( "events", base64_encode(json_encode([])),time()+3600,"/"); // срок действия час
 }

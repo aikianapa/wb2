@@ -1101,7 +1101,7 @@ class wbApp
             //session_write_close(); Нельзя, иначе проблемы с логином
             $url=parse_url($file);
             if (isset($url["scheme"])) {
-                session_write_close();
+
                 $context = stream_context_create(array(
                      'http'=>array(
                              'method'=>"POST",
@@ -1113,6 +1113,7 @@ class wbApp
                              'content' => http_build_query($_POST)
                      )
                  ));
+                session_write_close();
                 $res=@file_get_contents($file, false, $context);
                 session_start();
             } else {
