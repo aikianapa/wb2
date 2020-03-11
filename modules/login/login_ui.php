@@ -120,6 +120,8 @@
     		success			= "Password successfully changed"
         email   = "Email"
         emailentry = "Enter your Email"
+        phone = "Phone"
+        phoneentry = "Enter your phone number"
         firstname = "First Name"
         lastname = "Last Name"
 [ru]
@@ -147,6 +149,8 @@
 		success			= "Пароль успешно изменён"
     email = "Эл. почта"
     emailentry = "Введите ваш Email"
+    phone = "Телефон"
+    phoneentry = "Введите ваш телефон"
     firstname = "Имя"
     lastname = "Фамилия"
 </script>

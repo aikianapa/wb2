@@ -21,6 +21,13 @@
       <small>{{_lang.lastname}}</small>
 </div>
 
+<div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend"><i class="input-group-text fa fa-phone"></i></div>
+        <input class="form-control" placeholder="{{_lang.phone}}" name="phone" type="phone" required>
+      </div>
+      <small>{{_lang.phoneentry}}</small>
+</div>
 
 <div class="form-group">
       <div class="input-group">

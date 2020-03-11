@@ -212,7 +212,7 @@ function tagForeach(&$dom,$Item=null) {
         $item->setReference($Item);
         if ($par->min) {
             foreach($par->min as $i => $fld) {
-                $value = $item->get($fld);
+                  $value = $item->get($fld);
                 if (!$dom->attr("data-min-{$fld}") OR $dom->attr("data-min-{$fld}") > $value) $dom->attr("data-min-{$fld}",$value);
             }
         }
@@ -230,6 +230,18 @@ function tagForeach(&$dom,$Item=null) {
               $count++;
             }
             $dom->attr("data-count",$count);
+        }
+        if ($par->data) {
+            $Data = json_decode($dom->attr("data-data"),true);
+            if ($Data == "") $Data = [];
+            $data = new Dot();
+            $d = [];
+            $data->setReference($d);
+            foreach($par->data as $i => $fld) {
+                $data->set($fld,$item->get($fld));
+            }
+            $Data[] = $data;
+            $dom->attr("data-data",json_encode($Data));
         }
     }
 ?>

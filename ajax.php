@@ -182,6 +182,7 @@ function ajax_fetch() {
   $data = [];
   foreach($tpl->attributes() as $at => $val) {
       if (substr($at,0,5) == "data-" && substr($at,0,7) !== "data-wb") {
+          if (substr($at,5) == "data") $val = json_decode($val);
           $data[substr($at,5)] = $val;
       }
   }

@@ -1138,7 +1138,6 @@ class wbApp
     public function getTpl($tpl = null, $path = false)
     {
         $out = null;
-
         if (true == $path) {
             if (!$cur and is_file($_ENV['path_app']."/{$tpl}")) {
                 $cur = wbNormalizePath($_ENV['path_app']."/{$tpl}");
@@ -1151,7 +1150,7 @@ class wbApp
                 $cur = wbNormalizePath($_ENV['path_engine']."/tpl/{$tpl}");
             }
         }
-        $out = $this->fromFile($cur,true);
+        if ($cur > "") $out = $this->fromFile($cur,true);
         if (!$out) {
             if ($path !== false) {
                 $cur = wbNormalizePath($path."/{$tpl}");
@@ -1159,8 +1158,9 @@ class wbApp
                 $cur = wbNormalizePath($_ENV['path_tpl']."/{$tpl}");
             }
             $cur=str_replace($_ENV["path_app"], "", $cur);
-            wbErrorOut(wbError('func', __FUNCTION__, 1011, array($cur)));
+            wbError('func', __FUNCTION__, 1011, array($cur));
         }
+
 //        $locale=$out->setLocale($ini);
 //        if ($locale!==null) {
 //            wbEnvData("tpl->{$tpl}->locale", $locale);

@@ -87,6 +87,7 @@
         case "template":
                 // ======================
             $out=$dom->app->getTpl($dom->params->template);
+            if (!$out) return $out;
             $out->data = $dom->data;
             $out->fetch();
             tagIncludeContent($dom,$out);

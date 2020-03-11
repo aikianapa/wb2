@@ -6,8 +6,9 @@ wbapp.loadScripts = function(scripts = [], trigger = null, func = null) {
   if (wbapp.loadedScripts == undefined) wbapp.loadedScripts = [];
   let i = 0;
   scripts.forEach(function(src) {
-    let name = src.split("/");
-    name = name[name.length-1];
+//    let name = src.split("/");
+//    name = name[name.length-1];
+    let name = src;
     if (wbapp.loadedScripts.indexOf(name) !== -1) {
       i++;
       if (i >= scripts.length) {
@@ -38,7 +39,6 @@ wbapp.loadScripts = function(scripts = [], trigger = null, func = null) {
       document.head.appendChild(script);
     }
   });
-
 }
 
 wbapp.loadStyles = function(styles = [], trigger = null, func = null) {
@@ -288,6 +288,7 @@ wbapp.modalsInit = function() {
 }
 
 wbapp.init = function() {
+  wbapp.pluginsInit();
   wbapp.modalsInit();
   wbapp.tplInit();
   wbapp.watcherInit();
@@ -337,6 +338,37 @@ wbapp.alert = function(options) {
     };
     let settings = $.extend(defaults,options);
     $.toast(settings);
+}
+
+wbapp.pluginsInit = function() {
+  // maskedinput
+  $("[type='mask'],[type='phone'],[type='tel']").each(function(){
+      let that = this;
+      wbapp.loadScripts([
+          "/engine/lib/js/maskedinput/maskedinput.min.js"
+      ],"inputmask-js",function(){
+          if ($(that).data("ready") == undefined) {
+              let mask = "";
+              if ($(that).attr("type") == "phone" || $(that).attr("type") == "tel") mask = "+9 (999) 999-99-99";
+              if ($(that).data("mask") !== undefined) mask = $(that).data("mask");
+              if (mask > "") $(that).mask(mask);
+              $(that).data("ready",true);
+          }
+      });
+  });
+  // autosize textarea
+  $("textarea[rows='auto']").each(function(){
+      let that = this;
+      wbapp.loadScripts([
+          "/engine/lib/js/autosize/autosize.min.js"
+      ],"autosize-js",function(){
+          if ($(that).data("ready") == undefined) {
+              autosize(that);
+              $(that).data("ready",true);
+          }
+      });
+  });
+
 }
 
 wbapp.watcherInit = function() {
@@ -967,8 +999,9 @@ function getcookie(cookie_name) {
 setTimeout(function(){
     wbapp.loadStyles(["/engine/lib/js/toast/jquery.toast.css"]);
     wbapp.loadScripts([
-      "/engine/js/jquery.cookie.js",
+      "/engine/js/jquery-migrate.min.js",
       "/engine/js/jquery-ui.min.js",
+      "/engine/js/jquery.cookie.js",
       "/engine/js/php.js",
       "/engine/lib/js/toast/jquery.toast.js"
     ], "wbapp-js", function() {

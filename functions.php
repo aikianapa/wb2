@@ -2631,7 +2631,12 @@ return $result;
         			die;
             }
         }
-        $res = eval('return '.$func.'();');
+        if (strpos($func,"(")) {
+            $res = eval('return '.$func.';');
+        } else {
+            $res = eval('return '.$func.'();');
+        }
+
         return $res;
     }
 
