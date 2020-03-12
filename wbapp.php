@@ -1111,10 +1111,14 @@ class wbApp
                              'Cookie: ' . $_SERVER['HTTP_COOKIE']."\r\n" .
                              'Connection: ' . " Close\r\n\r\n",
                              'content' => http_build_query($_POST)
+                     ),
+                     "ssl"=>array(
+                         "verify_peer"=>false,
+                         "verify_peer_name"=>false,
                      )
                  ));
                 session_write_close();
-                $res=@file_get_contents($file, false, $context);
+                $res=@file_get_contents($file, true, $context);
                 session_start();
             } else {
                 if (!is_file($file)) {
