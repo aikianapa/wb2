@@ -281,6 +281,7 @@ wbapp.modalsInit = function() {
         wbapp.tplInit();
         wbapp.watcherInit();
         wbapp.wbappScripts();
+        wbapp.pluginsInit();
       }
       $(".modal.show:not(:visible),.modal[data-show=true]:not(:visible)").modal("show");
       if ($.fn.tooltip) $('[data-toggle="tooltip"]').tooltip();
@@ -348,10 +349,11 @@ wbapp.pluginsInit = function() {
           "/engine/lib/js/maskedinput/maskedinput.min.js"
       ],"inputmask-js",function(){
           if ($(that).data("ready") == undefined) {
+                      console.log("inputmask-js");
               let mask = "";
               if ($(that).attr("type") == "phone" || $(that).attr("type") == "tel") mask = "+9 (999) 999-99-99";
-              if ($(that).data("mask") !== undefined) mask = $(that).data("mask");
-              if (mask > "") $(that).mask(mask);
+              if ($(that).attr("data-mask") !== undefined) mask = $(that).attr("data-mask");
+              if (mask > "") $(that).inputmask(mask);
               $(that).data("ready",true);
           }
       });

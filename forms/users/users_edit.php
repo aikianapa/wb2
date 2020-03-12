@@ -47,17 +47,23 @@
 
 
           <div class="form-group row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <label class="form-control-label">{{_lang.firstname}}</label>
               <input type="text" class="form-control" name="first_name" placeholder="{{_lang.firstname}}">
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <label class="form-control-label">{{_lang.lastname}}</label>
               <input type="text" class="form-control" name="last_name" placeholder="{{_lang.lastname}}">
             </div>
-            <div class="col-sm-4">
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6">
               <label class="form-control-label">{{_lang.email}}</label>
               <input type="text" class="form-control" name="email" placeholder="{{_lang.email}}">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-control-label">{{_lang.phone}}</label>
+              <input type="phone" class="form-control" name="phone" placeholder="{{_lang.phone}}">
             </div>
           </div>
 
