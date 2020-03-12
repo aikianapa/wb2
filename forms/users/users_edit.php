@@ -30,7 +30,7 @@
             <div class="col-sm-4">
               <label class="form-control-label">{{_LANG[group]}}</label>
               <select class="form-control" placeholder="" name="role" data-wb="role=foreach&form=users&tpl=false"
-                data-wb-if='isgroup="on"'>
+                data-wb-if='isgroup="on" AND active="on"'>
                 <option value="{{id}}">{{id}}</option>
               </select>
             </div>

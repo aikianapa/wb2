@@ -99,6 +99,8 @@ function login__signup(&$app)
                 $user["id"] = $app->vars("_post.{$fld}");
                 unset($_POST["login"]);
             }
+            if ($app->vars("_sett.modules.login.status")) $user["active"] = $app->vars("_sett.modules.login.status");
+            if ($app->vars("_sett.modules.login.group")) $user["role"] = $app->vars("_sett.modules.login.group");
             $user = $app->postToArray($user);
             $app->itemSave("users", $user);
             header('Location: /signin');
