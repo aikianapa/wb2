@@ -596,14 +596,11 @@ wbapp.sleep = function(miliseconds) {
 }
 
 wbapp.loading = function() {
-  if (!$("#wb-loading").length) {
-    $("body").append("<div id='wb-loading'></div>");
-  }
-  $("#wb-loading").show();
+  if ($("#wb-loading").length) $("#wb-loading").show();
 }
 
 wbapp.unloading = function() {
-  $("#wb-loading").hide();
+  if ($("#wb-loading").length) $("#wb-loading").hide();
 }
 
 wbapp.getModal = function(id = null) {

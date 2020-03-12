@@ -7,4 +7,3 @@
       wbapp.loadStyles(["/engine/css/wbapp.less"],"wbapp-css");
   });
 </script>
-<div id="wb-loading"></div>
