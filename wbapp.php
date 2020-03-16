@@ -802,11 +802,12 @@ class wbApp
     public function filterItem($item) {
         if ($this->vars("_post._filter")) $filter = $this->vars("_post._filter");
         if (!isset($filter)) return true;
+
         $vars = new Dot();
         $vars->setReference($item);
         foreach($filter as $fld => $val) {
+            if (is_string($val)) $val = preg_replace('/^\%(.*)\%$/', "", $val);
             if ($val !== "") {
-                if (is_string($val)) $val = preg_replace('/^\%(.*)\%$/', "", $val);
                 if (in_array(substr($fld,-5),["__min","__max"])) {
                     if (substr($fld,-5) == "__min" AND $val > $vars->get(substr($fld,0,-5))) return false;
                     if (substr($fld,-5) == "__max" AND $val < $vars->get(substr($fld,0,-5))) return false;
