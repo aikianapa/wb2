@@ -557,6 +557,21 @@ class wbDom extends DomQuery
         return in_array($attr,$attrs);
     }
 
+    public function selectValues() {
+      if ($this->hasAttr("placeholder")) $this->html("<option value='' class='placeholder'>".$this->attr("placeholder")."</option>");
+      if ($this->attr("data-wb-value")) {
+          if ($this->is("[multiple]")) {
+              $value = json_decode($this->attr("data-wb-value"),true);
+              if ((array)$value === $value) {
+                  foreach ($value as $val) {
+                      if ($val > "") $this->find("option[value='".$val."']")->attr("selected", true);
+                  }
+              }
+          }
+      }
+    }
+
+
     public function setValues($Item=null)
     {
         $tplInner = [];
@@ -585,12 +600,16 @@ class wbDom extends DomQuery
         }
         $list=$this->find("input,select,textarea");
         if (!$list->length) return $this;
+        $dot = new dot();
+        $dot->setReference($Item);
+        if (isset($_POST["_filter"])) $dot->set("_filter",$_POST["_filter"]);
         foreach ($list as $inp) {
             if (!$inp->hasClass("wb-value")) {
                 $inp->data = $Item;
                 $inp->setAttributes();
                 $from=$inp->attr("data-wb-from");
-                $name=$inp->attr("name");
+                $name = $inp->attr("name");
+                if (strpos($name,"[")) $name = wbDotName($name);
                 $def=$inp->attr("value");
                 if ($inp->is("textarea")) {
                     $def=$inp->html();
@@ -604,22 +623,22 @@ class wbDom extends DomQuery
                         $inp->html(($def));
                     }
                     $inp->addClass("wb-value");
-                } else if ($inp->is("select") and isset($Item[$name])) {
+                } else if ($inp->is("select") AND $dot->get($name)) {
                           if ($inp->is("[multiple]")) {
-                              $value=json_decode($Item[$name], true);
+                              $value = $dot->get($name);
                               if ((array)$value === $value) {
                                   foreach ($value as $val) {
                                       if ($val>"") {
-                                          $inp->find("option[value=".$val."]")->attr("selected", true);
+                                          $inp->find("option[value='".$val."']")->attr("selected", true);
                                       }
                                   }
                               }
-                              $value=$value[0];
-                              $inp->addClass("wb-value");
+                              $value=json_encode($value);
                           } else {
-                              $value=$Item[$name];
+                              $value = $dot->get($name);
                               $inp->find("option[value='".$value."']")->attr("selected", true);
                           }
+                          $inp->addClass("wb-value");
                           $inp->attr("data-wb-value",$value);
                 } else {
                     if (substr($name, -2)=="[]") $name=substr($name, 0, -2);
@@ -786,14 +805,16 @@ class wbApp
         $vars = new Dot();
         $vars->setReference($item);
         foreach($filter as $fld => $val) {
-            $val = preg_replace('/^\%(.*)\%$/', "", $val);
-            if ($val !== "" AND in_array(substr($fld,-5),["__min","__max"])) {
-                if (substr($fld,-5) == "__min" AND $val > $vars->get(substr($fld,0,-5))) return false;
-                if (substr($fld,-5) == "__max" AND $val < $vars->get(substr($fld,0,-5))) return false;
-            } else if ($val !== "" AND (string)$val === $val AND $vars->get($fld) !== $val) {
-                return false;
-            } else if ((array)$val === $val AND !in_array($vars->get($fld),$val) ) {
-                return false;
+            if ($val !== "") {
+                if (is_string($val)) $val = preg_replace('/^\%(.*)\%$/', "", $val);
+                if (in_array(substr($fld,-5),["__min","__max"])) {
+                    if (substr($fld,-5) == "__min" AND $val > $vars->get(substr($fld,0,-5))) return false;
+                    if (substr($fld,-5) == "__max" AND $val < $vars->get(substr($fld,0,-5))) return false;
+                } else if ((string)$val === $val AND $vars->get($fld) !== $val) {
+                    return false;
+                } else if ((array)$val === $val AND !in_array($vars->get($fld),$val) AND $val !== []) {
+                    return false;
+                }
             }
 
         }

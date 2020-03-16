@@ -94,7 +94,6 @@ class tagTreeSelect {
           } else if ($params->branch > "") {
               $this->tree = wbTreeFindBranch($this->tree,$params->branch);
           }
-          if ($this->dom->hasAttr("placeholder")) $this->dom->html("<option value='' class='placeholder'>".$this->dom->attr("placeholder")."</option>");
       } else {
           $app = $this->dom->app;
       }
@@ -124,7 +123,11 @@ class tagTreeSelect {
 
             if ($this->parent !== false && $item["active"] == "on")  $flag = true;
             if ($this->level > "" && $this->level !== $this->lvl) $flag = false;
-            if ($app->vars("_post._filter") && $flag) $flag = $app->filterItem($item);
+            if ($app->vars("_route.controller") == "ajax") {
+                // применяем фильтр только для ajax вызовов
+                if ($app->vars("_post._filter") && $flag) $flag = $app->filterItem($item);
+            }
+
             if ($flag == true) $this->select->append($line);
 
             if (isset($item["children"]) AND (array)$item["children"] === $item["children"] AND count($item["children"])) {
@@ -149,6 +152,7 @@ class tagTreeSelect {
             $this->lvl--;
         }
       }
+            $this->dom->selectValues();
   }
 }
 

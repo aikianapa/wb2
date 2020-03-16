@@ -175,10 +175,7 @@ function tagForeach(&$dom,$Item=null) {
             $dom->html($inner);
             if (isset($result) AND !is_array($result)) $dom->outerHtml("");
             if (isset($srcItem[$dom->attr('name')])) $dom->attr('value',$srcItem[$dom->attr('name')]);
-            $plhr=$dom->attr("placeholder");
-            if ($plhr>"") {
-                $dom->prepend("<option value=''>$plhr</option>");
-            }
+            $dom->selectValues();
         } else {
             $dom->html(wbClearValues($inner));
             if ($step>0) {
@@ -191,7 +188,7 @@ function tagForeach(&$dom,$Item=null) {
                 $dom->html($inner);
             }
             if ($dom->params->group OR $dom->params->total) {
-                $dom->dataProcessor();
+                //$dom->dataProcessor();
                 $size=false;
             }
             if ($size AND !$dom->hasClass("pagination")) {

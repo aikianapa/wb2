@@ -2037,6 +2037,13 @@ function wbt_route($sid, $e, $r = 'TABLE')
     }
 }
 
+function wbDotName($name) {
+  $name = str_replace(["[","]"],[".",""],$name);
+  $name = str_replace(["...",".."],".",$name);
+  if (substr($name,-1) == ".") $name = substr($name,0,-1);
+  return $name;
+}
+
 class wbt_filter extends FilterIterator
 {
     private $userFilter;

@@ -463,7 +463,8 @@ wbapp.watcherInit = function() {
                           $(params.change).html(result.result).trigger("change");
                       }
                       console.log("Trigger: watcher_change");
-                      $(document).trigger("watcher_change",params.change,result);
+                      result.change = params.change;
+                      $(document).trigger("watcher_change", result);
                   });
                   $(that).data("watcher_change",true);
               }
