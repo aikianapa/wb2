@@ -558,7 +558,6 @@ class wbDom extends DomQuery
     }
 
     public function selectValues() {
-      if ($this->hasAttr("placeholder")) $this->html("<option value='' class='placeholder'>".$this->attr("placeholder")."</option>");
       if ($this->attr("data-wb-value")) {
           if ($this->is("[multiple]")) {
               $value = json_decode($this->attr("data-wb-value"),true);
@@ -569,6 +568,7 @@ class wbDom extends DomQuery
               }
           }
       }
+      if ($this->hasAttr("placeholder")) $this->prepend("<option value='' class='placeholder'>".$this->attr("placeholder")."</option>");
     }
 
 

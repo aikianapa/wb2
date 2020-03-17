@@ -449,19 +449,22 @@ wbapp.watcherInit = function() {
                   $(that).on("change",function(){
                       let template = wbapp.tpl[tpl].html;
                       let val = $(that).val();
+                      let filter;
                       if ($(that).is("select") && params.value > "") {
                         val = $(that).find("option:selected").attr("data-"+params.value);
                       } else if ($(that).is("select")) {
                         val = $(that).val();
                         if ($(this).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
-                        template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
+                        if (!is_string(val) || (substr(trim(val),0,1) == "[" && substr(trim(val),-1) == "]")) {
+                            template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
+                        } else {
+                            template = str_replace('%value%',val,template);
+                        }
                       }
-                      template = str_replace('%value%',val,template);
-
-                      var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route});
-                      if (result.result !== undefined) {
-                          $(params.change).html(result.result).trigger("change");
-                      }
+                      if ($(template).attr("data-filter") !== undefined) filter = json_decode($(template).attr("data-filter"));
+                      $(template).removeAttr("data-filter");
+                      var result = wbapp.postWait("/ajax/fetch",{_tpl:template,_route:wbapp.template(tpl).params.route,_filter:filter});
+                      if (result.result !== undefined) $(params.change).html(result.result).trigger("change");
                       console.log("Trigger: watcher_change");
                       result.change = params.change;
                       $(document).trigger("watcher_change", result);
