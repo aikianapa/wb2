@@ -2132,7 +2132,11 @@ function wbAuthGetContents($url,$get=null,$username=null,$password=null) {
                     'method'=>'GET',
                     'header'=>$cred,
                     'content'=>$get
-                )
+                ),
+				 "ssl"=>array(
+					 "verify_peer"=>false,
+					 "verify_peer_name"=>false,
+				 )
             );
             $context = stream_context_create($opts);
             session_write_close();
@@ -2155,7 +2159,11 @@ function wbAuthPostContents($url, $post=null, $username=null,$password=null) {
                     'method'=>'POST',
                     'header'=>$cred."\r\nCookie: ".session_name()."=".session_id()."\r\n",
                     'content'=>$post
-                )
+                ),
+				 "ssl"=>array(
+					 "verify_peer"=>false,
+					 "verify_peer_name"=>false,
+				 )
             );
     $context = stream_context_create($opts);
     session_write_close();
