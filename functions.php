@@ -1232,11 +1232,11 @@ function wbItemInit($table, $item = null)
 {
     $app = &$_ENV["app"];
     $item['_table'] = $item['_form'] = $table;
-    $tmp=wbItemRead($item["_form"],$item["id"]);
-    if (!$tmp or !isset($tmp['_created']) or '' == $tmp['_created']) {
+    $tmp = wbItemRead($item["_form"],$item["id"]);
+    if ((!$tmp or !isset($tmp['_created']) or '' == $tmp['_created']) AND !isset($item["_created"]) ) {
         $item['_created'] = date('Y-m-d H:i:s');
     }
-    if (!$tmp or !isset($tmp['_creator']) or '' == $tmp['_creator']) {
+    if ((!$tmp or !isset($tmp['_creator']) or '' == $tmp['_creator']) AND !isset($item["_creator"])) {
         $item['_creator'] = $app->vars("_env.user.id");
     }
     $item['_lastdate'] = date('Y-m-d H:i:s');
