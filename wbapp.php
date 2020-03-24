@@ -575,8 +575,13 @@ class wbDom extends DomQuery
     public function setValues($Item=null)
     {
         $tplInner = [];
-        $tpls = $this->find("template");
-        foreach($tpls as $tpl) {$tplInner[] = $tpl->html(); $tpl->html("");}
+        $tpls = $this->find("template:not([data-save-tpl])");
+        foreach($tpls as $tpl) {
+          $t = wbNewId();
+          $tpl->attr("data-save-tpl",$t);
+          $tplInner[$t] = $tpl->html();
+          $tpl->html("");
+        }
 
         $outer = $this->outerHtml();
         if (trim($outer) == "") return $this;
@@ -599,7 +604,7 @@ class wbDom extends DomQuery
           $this->html($inner);
         }
         $list=$this->find("input,select,textarea");
-        if (!$list->length) return $this;
+        if ($list->length) {
         $dot = new dot();
         $dot->setReference($Item);
         if (isset($_POST["_filter"])) $dot->set("_filter",$_POST["_filter"]);
@@ -678,9 +683,15 @@ class wbDom extends DomQuery
                 };
             }
         }
-
-        $tpls = $this->find("template");
-        foreach($tpls as $t => $tpl) {$tpl->html($tplInner[$t]);}
+        }
+        $tpls = $this->find("template[data-save-tpl]");
+        foreach($tpls as $tpl) {
+          $t = $tpl->attr("data-save-tpl");
+          if ($t > "") {
+              $tpl->removeAttr("data-save-tpl");
+              $tpl->html($tplInner[$t]);
+          }
+        }
 
         return $this;
     }
