@@ -13,13 +13,10 @@
  * Use at your own risk
  */
 
-
-
   /** Device is not iOS. There's no need to hack the planet. */
   if( typeof navigator.userAgent == 'undefined' || ! navigator.userAgent.match(/(iPad|iPhone|iPod)/i) ){
-    return;
-  }
-
+      console.log("Not required iOS fix");
+  } else {
   var EVENT_NAMESPACE = 'IOS9FIX';
   var MAX_DOM_DEPTH = 100;
 
@@ -236,3 +233,5 @@
   $.each([$(document), $(window), $('body'), $('html')], function(objectIndex, $object){
     initClickMock($object);
   });
+
+}
