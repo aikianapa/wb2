@@ -292,8 +292,8 @@ wbapp.init = function() {
   wbapp.pluginsInit();
   wbapp.modalsInit();
   wbapp.tplInit();
-  wbapp.watcherInit();
   wbapp.eventsInit();
+  wbapp.watcherInit();
   wbapp.wbappScripts();
   if ($.fn.tooltip) $(document).find('[data-toggle="tooltip"]').tooltip();
 }
@@ -380,7 +380,6 @@ wbapp.watcherInit = function() {
     };
 
     $(document).find("[data-watcher]").each(function(){
-
       var watcher_filter = function(that){
           let target = $(document).find(params.filter);
           if (!$(params.filter).length) {
@@ -445,8 +444,11 @@ wbapp.watcherInit = function() {
               var tpl = $(params.change).attr("data-wb-tpl");
           }
           if ($(that).data("watcher_change") == undefined) {
-              if ($(that).data("watcher_change") == undefined) {
                   $(that).on("change",function(){
+                      if ($(this).attr("data-wb-value") !== undefined) {
+                          $(this).val( $(this).attr("data-wb-value") );
+                          $(this).removeAttr("data-wb-value");
+                      }
                       let template = wbapp.tpl[tpl].html;
                       let val = $(that).val();
                       let filter;
@@ -454,10 +456,13 @@ wbapp.watcherInit = function() {
                         val = $(that).find("option:selected").attr("data-"+params.value);
                       } else if ($(that).is("select")) {
                         val = $(that).val();
-                        if ($(this).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
+                        if ($(that).attr("multiple")) val = str_replace('"',"&quot;",json_encode(val));
                         if (!is_string(val) || (substr(trim(val),0,1) == "[" && substr(trim(val),-1) == "]")) {
                             template = str_replace('&quot;%value%&quot;',val,template); // захватываем кавычки для правильной работы json
                         } else {
+                            if (val == "" && $(that).find("option:selected").length) {
+                                val = $(that).find("option:selected").attr("value");
+                            }
                             template = str_replace('%value%',val,template);
                         }
                       }
@@ -470,9 +475,7 @@ wbapp.watcherInit = function() {
                       $(document).trigger("watcher_change", result);
                   });
                   $(that).data("watcher_change",true);
-              }
-              $(that).data("watcher_change",true);
-              $(that).trigger("change");
+                  $(that).trigger("change");
           }
       }
 
@@ -559,7 +562,6 @@ wbapp.watcherCheck = function(params) {
     if (tpl > "") {
         var uri = wbapp.template(tpl).params.route.uri;
         var result = wbapp.postWait(uri,{_watch_item:item,_watch_route:wbapp.template(tpl).params.route});
-        console.log(params);
         result = $(result).find(params.watcher).html();
         $(result).find("script[type='text/locale']").remove();
         result = $(result).outerHTML();
