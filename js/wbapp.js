@@ -1005,6 +1005,7 @@ setTimeout(function(){
       "/engine/js/jquery-migrate.min.js",
       "/engine/js/jquery-ui.min.js",
       "/engine/js/jquery.cookie.js",
+      "/engine/js/jquery.tap.js",
       "/engine/js/php.js",
       "/engine/lib/js/toast/jquery.toast.js"
     ], "wbapp-js", function() {
