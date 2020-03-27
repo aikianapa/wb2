@@ -1,96 +1,238 @@
-(function($, specialEventName, marginX, marginY) {
-  'use strict';
+/**
+ * jQuery 2.0+  REQUIRED
+ * ==============================================
+ * iOS9 'click', 'mousedown' and 'mouseup' fix
+ * ---------------------------------------------
+ * Include this script in your poject to fix 'click', 'mousedown' and 'mouseup' event
+ * handling for $(window), $(document), $('body') and $('html'). By default iOS9 Safari is
+ * suppressing those events in some situations and without some magic they can't be rely on.
+ * This fix is blocking native event handlers from firing
+ * (in some rare cases event will reach it's destination)
+ * and it handles native event handlers basing on 'touchstart' and 'touchend' event.
+ * ---------------------------------------------
+ * Use at your own risk
+ */
 
-  /**
-   * Native event names for creating custom one.
-   *
-   * @type {Object}
-   */
-  var nativeEvent = Object.create(null);
-  /**
-   * Get current time.
-   *
-   * @return {Number}
-   */
-  var getTime = function() {
-    return new Date().getTime();
-  };
 
-  nativeEvent.original = 'click';
 
-  if ('ontouchstart' in document) {
-    nativeEvent.start = 'touchstart';
-    nativeEvent.end = 'touchend';
-  } else {
-    nativeEvent.start = 'mousedown';
-    nativeEvent.end = 'mouseup';
+  /** Device is not iOS. There's no need to hack the planet. */
+  if( typeof navigator.userAgent == 'undefined' || ! navigator.userAgent.match(/(iPad|iPhone|iPod)/i) ){
+    return;
   }
 
-  $.event.special[specialEventName] = {
-    setup: function(data, namespaces, eventHandle) {
-      var $element = $(this);
-      var eventData = {};
+  var EVENT_NAMESPACE = 'IOS9FIX';
+  var MAX_DOM_DEPTH = 100;
 
-      $element
-        // Remove all handlers that were set for an original event.
-        .off(nativeEvent.original)
-        // Prevent default actions.
-        .on(nativeEvent.original, false)
-        // Split original event by two different and collect an information
-        // on every phase.
-        .on(nativeEvent.start + ' ' + nativeEvent.end, function(event) {
-          // Handle the event system of touchscreen devices.
-          eventData.event = event.originalEvent.changedTouches ? event.originalEvent.changedTouches[0] : event;
-        })
-        .on(nativeEvent.start, function(event) {
-          // Stop execution if an event is simulated.
-          if (event.which && event.which !== 1) {
-            return;
-          }
+  /**
+   * Suppress event for $object.
+   * @param $object
+   * @param eventType
+   */
+  var blockEventFor = function($object, eventType) {
+    var eventQueue, eventRepo = new Array();
 
-          eventData.target = event.target;
-          eventData.pageX = eventData.event.pageX;
-          eventData.pageY = eventData.event.pageY;
-          eventData.time = getTime();
-        })
-        .on(nativeEvent.end, function(event) {
-          // Compare properties from two phases.
-          if (
-            // The target should be the same.
-            eventData.target === event.target &&
-            // Time between first and last phases should be less than 750 ms.
-            getTime() - eventData.time < 750 &&
-            // Coordinates, when event ends, should be almost the same as
-            // they were on start.
-            (
-              Math.abs(eventData.pageX - eventData.event.pageX) <= marginX &&
-              Math.abs(eventData.pageY - eventData.event.pageY) <= marginY
-            )
-          ) {
-            event.type = specialEventName;
-            event.pageX = eventData.event.pageX;
-            event.pageY = eventData.event.pageY;
+    if($._data($object.get(0),"events") !== undefined){
+      eventQueue = $._data($object.get(0),"events")[eventType];
+    }
 
-            eventHandle.call(this, event);
-
-            // If an event wasn't prevented then execute original actions.
-            if (!event.isDefaultPrevented()) {
-              $element
-                // Remove prevention of default actions.
-                .off(nativeEvent.original)
-                // Bring the action.
-                .trigger(nativeEvent.original);
-            }
-          }
+    if(eventQueue !== undefined) {
+      for(var i = 0; i < eventQueue.length; i++) {
+        eventRepo.push({
+          handler: eventQueue[i].handler,
+          selector: eventQueue[i].selector,
+          namespace: eventQueue[i].namespace
         });
-    },
+      }
 
-    remove: function() {
-      $(this).off(nativeEvent.start + ' ' + nativeEvent.end);
+      $object.off(eventType);
+    }
+
+    $object.on(eventType + '.' + EVENT_NAMESPACE, '*', function(event){
+      event.stopImmediatePropagation();
+    });
+
+    for(var i = 0; i < eventRepo.length; i++) {
+
+      var _eventType = eventRepo[i].namespace
+          ? eventType + '.' + eventRepo[i].namespace
+          : eventType;
+
+      $object.on(_eventType, eventRepo[i].selector, eventRepo[i].handler);
     }
   };
 
-  $.fn[specialEventName] = function(fn) {
-    return this[fn ? 'on' : 'trigger'](specialEventName, fn);
+  /**
+   * EXECUTE MOCKED-EVENT HANDLERS
+   * @param object $object
+   * @param string mockedEventType
+   * @param object originalEvent
+   */
+  var executeMockedEventHandlers = function($object, mockedEventType, originalEvent){
+    /** Let's say touch is mouse left button (by default touch event has .which === 0) */
+    originalEvent.which = 1;
+
+    var mockedEventQueue, $target = $(originalEvent.target);
+
+    if($._data($object.get(0), "events") !== undefined){
+      mockedEventQueue = $._data($object.get(0), "events")[mockedEventType];
+    }
+
+    /** No event-handlers for event of such type */
+    if(mockedEventQueue === undefined){
+      return false;
+    }
+
+    /** Traverse DOM from 'target' to 'base' and execute mockedEventHandlers for all matched elements */
+    for(var preventEndlessLoop = 0; preventEndlessLoop < MAX_DOM_DEPTH; preventEndlessLoop++){
+
+      /** END THE LOOP */
+      if($target.length == 0){
+        break;
+      }
+
+      /** EXECUTE MOCKED EVENT HANDLERS */
+      for(var i = 0; i < mockedEventQueue.length; i++){
+
+        // Skip eventHandler used to block originalEvent for mockedEvent
+        if(mockedEventQueue[i].namespace === EVENT_NAMESPACE){
+          continue;
+        }
+
+        if(mockedEventQueue[i].selector === undefined){
+          // Skip $object level eventHandlers until current DOM level is $object level
+          if( ! $target.is($object[0])) {
+            continue;
+          }
+        } else {
+          // Skip eventHandlers not meant for current DOM level
+          if( ! $target.is(mockedEventQueue[i].selector)){
+            continue;
+          }
+        }
+
+        // Execute handler for current DOM level
+        if(mockedEventQueue[i].handler.call($target[0], originalEvent) === false){
+          originalEvent.stopImmediatePropagation();
+        }
+
+        // Check for stopImmediatePropagation() */
+        if(originalEvent.isImmediatePropagationStopped()){
+          break;
+        }
+      }
+
+      if(originalEvent.isPropagationStopped()){
+        break;
+      }
+
+      /** Go to parent level */
+      $target = $target.parent();
+    }
   };
-})(jQuery, 'tap', 10, 10);
+
+
+
+  /*****************************
+   *      INITIALIZATION
+   ****************************/
+
+  /**
+   * Go through objects and suppress all selected events.
+   */
+  $.each([$(document), $(window), $('body'), $('html')], function(objectIndex, $object){
+    $.each(['mousedown', 'click',  'mouseup'], function(eventIndex, eventType){
+      blockEventFor($object, eventType);
+    });
+  });
+
+
+  /**
+   * MOCK MOUSEDOWN EVENT
+   */
+
+  /**
+   * Init MouseDown-Mock for Dom $object
+   * @param $object
+   */
+  var initMouseDownMock = function($object) {
+    $object.on('touchstart', function (event) {
+      executeMockedEventHandlers($object, 'mousedown', event);
+    });
+  };
+
+  /**
+   * Init MouseDown-Mock for objects...
+   */
+  $.each([$(document), $(window), $('body'), $('html')], function(objectIndex, $object){
+    initMouseDownMock($object);
+  });
+
+
+  /**
+   * MOCK MOUSEUP EVENT
+   */
+
+  /**
+   * Init MouseUp-Mock for Dom $object
+   * @param $object
+   */
+  var initMouseUpMock = function($object) {
+    $object.on('touchend', function (event) {
+      executeMockedEventHandlers($object, 'mouseup', event);
+    });
+  };
+
+  /**
+   * Init MouseUp-Mock for objects...
+   */
+  $.each([$(document), $(window), $('body'), $('html')], function(objectIndex, $object){
+    initMouseUpMock($object);
+  });
+
+
+  /**
+   * MOCK CLICK EVENT
+   */
+
+  /**
+   * Init Click-Mock for Dom $object
+   * @param $object
+   */
+  var initClickMock = function($object) {
+    var clickCancelationTimer, isClick, cursorX, cursorY, target;
+
+    $object.on('touchstart', function(event){
+      isClick = true;
+
+      cursorX = event.originalEvent.touches[0].pageX;
+      cursorY = event.originalEvent.touches[0].pageY;
+      target = event.target;
+
+      /** Click Timeout */
+      clickCancelationTimer = setTimeout(function(){
+        isClick = false;
+      }, 300);
+    });
+
+    /** moved more than 10 px away from starting position */
+    $object.on('touchmove', function(event){
+      if(Math.abs(cursorX - event.originalEvent.touches[0].pageX) > 10 || Math.abs(cursorY - event.originalEvent.touches[0].pageY) > 10){
+        isClick = false;
+      }
+    });
+
+    $object.on('touchend', function(event){
+      clearTimeout(clickCancelationTimer);
+
+      if(isClick){
+        executeMockedEventHandlers($object, 'click', event);
+      }
+    });
+  };
+
+  /**
+   * Init Click-Mock for objects...
+   */
+  $.each([$(document), $(window), $('body'), $('html')], function(objectIndex, $object){
+    initClickMock($object);
+  });
