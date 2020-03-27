@@ -102,6 +102,7 @@ class tagTreeSelect {
         if ($rand==true) shuffle($tree);
         foreach($this->tree as $i => $item) {
             if (!((array)$item === $item)) $item = (array)$item;
+            if (!isset($item["id"])) $item["id"] = $i;
             $line=$app->fromString($this->tpl);
             $line->fetch($item);
             if ($this->parent === "disabled") {
@@ -220,6 +221,7 @@ function tagTreeUl(&$dom,$Item=array(),$param=null,$srcVal=array()) {
                 $item["_parent"]=$tree;
                 $lvl++;
                 $item=(array)$srcVal + (array)$item;
+                if (!isset($item["id"])) $item["id"] = $i;
                 $item["_pid"]=$parent_id;
                 $item["_idx"]=$idx;
                 $item["_ndx"]=$idx+1;
