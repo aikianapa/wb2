@@ -122,6 +122,12 @@ function tagForeach(&$dom,$Item=null) {
             if (!isset($_POST["_filter"])) $_POST["_filter"] = $filter;
         }
 
+		if ($size) {
+			$_ndx = $size*$page-($size*1)+1;
+		} else {
+			$_ndx = 1;
+		}
+
         foreach($Item as $key => $val) {
             if (!((array)$val === $val)) $val = ["_value"=>$val];
               $val["_parent"] = $Item;
@@ -133,7 +139,7 @@ function tagForeach(&$dom,$Item=null) {
                   $val["_data"] = $val;
                   $val["_odev"]=$oddeven;
                   $val["_key"]=$key;
-                  $val["_ndx"]=$ndx+1;
+                  $val["_ndx"] = $_ndx;
                   $val["_id"] = $val["id"] = $key;
                   wbItemBeforeShow($val);
                   if ($flag AND $dom->params->if) $flag=wbWhereItem($val,$dom->params->if);
@@ -157,11 +163,12 @@ function tagForeach(&$dom,$Item=null) {
                             if (!$size OR ($n>=$minpos AND $n<=$maxpos)) {
                               $inner.=$tmptpl;
                               $ndx++;
+                              $_ndx++;
                             }
                       }
                       if ($ndx == $limit) break;
                   } else {
-                      $val["_ndx"]--;
+                      //$val["_ndx"]--;
                   }
 
               if (isset($dom->params->limit) AND $n >= $dom->params->limit*1) break;

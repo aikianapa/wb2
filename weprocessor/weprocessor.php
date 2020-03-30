@@ -313,11 +313,11 @@ class WEProcessor {
 				return null;
 				//return $expr;
 			} else {
+				if ((array)$res === $res) return json_encode($res);
 				// Fix bug when '.label}}' returned if not on index
 				preg_match('/^.*?\}\}$/m', $res, $matches);
 				if (count($matches) AND substr($expr,- strlen($res)) == $res) $res = "";
 				// Print the entire match result
-				if ((array)$res === $res) return json_encode($res);
 				else return $res;
 			}
 		} catch (parse_error $e) {

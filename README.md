@@ -15,8 +15,6 @@
 
 ### Installation
 
-* Download and extract [ZIP file](https://github.com/aikianapa/wb/archive/master.zip) WebBasic to your web directory or get the latest development version with:
-
-`git clone https://github.com/aikianapa/wb.git engine`
+`git clone https://github.com/aikianapa/wb2.git engine`
 * Open link in browser: http://yourdomain/signin
 
