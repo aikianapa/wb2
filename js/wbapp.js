@@ -877,6 +877,7 @@ $.fn.runScripts = function() {
     var type = $(this).attr("type");
     if (type !== "text/locale" && type !== "text/template") {
       eval($(this).text());
+      if ($(this).attr("removable")!==undefined) $(this).remove();
     }
   });
 }
