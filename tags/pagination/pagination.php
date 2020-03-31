@@ -6,10 +6,11 @@ function tagPagination(&$dom)
     ini_set('max_execution_time', 900);
     ini_set('memory_limit', '1024M');
     $pages = ceil($dom->params->count/$dom->params->size);
-    $page = $dom->params->page;
+    $page = $dom->page;
+
     if (!$page) $page = 1;
 
-    $dom->params->pages = $pages;
+    $dom->pages = $pages;
     $foreach = $dom->params;
     $tplId = md5(json_encode($foreach));
     $foreach->route = $dom->app->vars("_route");
@@ -81,7 +82,7 @@ function tagPagination(&$dom)
         }
 
 
-        if ($pages<2) {
+        if ($pages < 2) {
             $style=$pag->find("ul")->attr("style");
             $pag->find("ul")->attr("style", $style.";display:none;");
         }
@@ -98,6 +99,7 @@ function tagPagination(&$dom)
             $target->after($pag);
         }
     }
+    $dom->find("[data-page='{$page}']")->addClass("active");
     $dom->removeAttr("data-wb");
     $dom->append("
         <script type='wbapp' removable>
@@ -158,7 +160,7 @@ function tagPagination(&$dom)
         if (!isset($find)) $find='';
 
 
-        $tpl=$app->FromString($tpl, true);
+        $tpl = $app->FromString($tpl, true);
         $fe = $tpl->children(".wb-html")->children(":first-child");
         $fe->attr("data-wb-page", $page);
         $tpl->fetch();

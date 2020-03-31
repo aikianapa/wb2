@@ -200,6 +200,8 @@ function tagForeach(&$dom,$Item=null) {
             }
             if ($size AND !$dom->hasClass("pagination")) {
                 $find=$dom->params->find;
+                $dom->page = $page;
+                $dom->pages = $pages;
                 tagPagination($dom);
             }
         }

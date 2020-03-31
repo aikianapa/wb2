@@ -28,8 +28,8 @@ $(document).one("pagination-js", function() {
     } else {
       $(this).wbPagination();
     }
-    $(document).find(".pagination[id=" + pid + "] .page-item").removeClass("active");
-    $(document).find(".pagination[id=" + pid + "] .page-item:nth-child(" + ($(this).parent("li").index() + 1) + ")").addClass("active");
+    //$(document).find(".pagination[id=" + pid + "] .page-item").removeClass("active");
+    //$(document).find(".pagination[id=" + pid + "] .page-item:nth-child(" + ($(this).parent("li").index() + 1) + ")").addClass("active");
   });
 
 
@@ -54,20 +54,18 @@ $(document).one("pagination-js", function() {
     var result = wbapp.postWait(uri, {
       _watch_page: pagenum
     });
+    pager = $(result).find(".pagination#ajax-"+tpl).html();
     result = $(result).find("[data-wb-tpl='"+tpl+"']");
     $(result).find("script[type='text/locale'],template").remove();
     result = $(result).html();
     $("body").removeClass("cursor-wait");
     wbapp.watcher[tpl].page(result);
 //    window.location.hash = "page-" + idx + "-" + pagenum;
+    $(document).find(".pagination#ajax-"+tpl).html(pager);
+    console.log(pager);
     $("body").removeClass("cursor-wait");
     console.log("Trigger: pagination-done");
     $(document).trigger("pagination-done",page,tpl,result);
-
-
-
-
-
     return;
     //=======//
 
