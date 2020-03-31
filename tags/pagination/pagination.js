@@ -54,7 +54,7 @@ $(document).one("pagination-js", function() {
     var result = wbapp.postWait(uri, {
       _watch_page: pagenum
     });
-    pager = $(result).find(".pagination#ajax-"+tpl).html();
+    var pager = $(result).find(".pagination#ajax-"+tpl).html();
     result = $(result).find("[data-wb-tpl='"+tpl+"']");
     $(result).find("script[type='text/locale'],template").remove();
     result = $(result).html();
@@ -62,7 +62,6 @@ $(document).one("pagination-js", function() {
     wbapp.watcher[tpl].page(result);
 //    window.location.hash = "page-" + idx + "-" + pagenum;
     $(document).find(".pagination#ajax-"+tpl).html(pager);
-    console.log(pager);
     $("body").removeClass("cursor-wait");
     console.log("Trigger: pagination-done");
     $(document).trigger("pagination-done",page,tpl,result);
